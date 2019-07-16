@@ -10,6 +10,16 @@ this repository contains the full copyright notices and license terms. -->
     <field name="reference"/>
     <label name="cash_bank"/>
     <field name="cash_bank"/>
+    <label name="date_start"/>
+    <field name="date_start"/>
+    <label name="date_end"/>
+    <field name="date_end"/>
+    <label name="bank_balance"/>
+    <field name="bank_balance"/>
+    <label name="check_amount"/>
+    <field name="check_amount"/>
+    <label name="diff"/>
+    <field name="diff"/>
     <notebook colspan="6">
         <page name="lines">
             <field name="lines" colspan="4"/>

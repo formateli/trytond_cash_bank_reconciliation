@@ -40,6 +40,25 @@ contains the full copyright notices and license terms. -->
         </record>
 
 
+        <!-- Logs -->
+
+        <record model="ir.model.access" id="access_group_log">
+            <field name="model" search="[('model', '=', 'cash_bank.reconciliation.log_action')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_group_log_admin">
+            <field name="model" search="[('model', '=', 'cash_bank.reconciliation.log_action')]"/>
+            <field name="group" ref="res.group_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+
         <!-- Reconciliation Line -->
 
         <record model="ir.ui.view" id="reconciliation_line_view_form">

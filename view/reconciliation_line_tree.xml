@@ -4,7 +4,6 @@ this repository contains the full copyright notices and license terms. -->
 <tree editable="bottom">
     <field name="reconciliation"/>
     <field name="date"/>
-    <field name="move_line"/>
     <field name="receipt"/>
     <field name="move_description"/>
     <field name="description"/>

@@ -6,6 +6,7 @@ from trytond.model import (
     Workflow, ModelView, ModelSQL, fields)
 from trytond.pyson import Eval, If
 from trytond.modules.log_action import LogActionMixin, write_log
+from decimal import Decimal
 
 __all__ = ['Reconciliation', 'ReconciliationLine', 'ReconciliationLog']
 
@@ -57,12 +58,23 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
         states=_STATES, depends=_DEPENDS)
     date = fields.Date('Date', required=True,
         states=_STATES, depends=_DEPENDS)
-    date_start = fields.Date('Date', required=True,
+    date_start = fields.Date('Start Date', required=True,
         states=_STATES, depends=_DEPENDS)
-    date_end = fields.Date('Date', required=True,
+    date_end = fields.Date('End Date', required=True,
         states=_STATES, depends=_DEPENDS)
     lines = fields.One2Many('cash_bank.reconciliation.line', 'reconciliation',
         'Lines', states=_STATES, depends=_DEPENDS)
+    bank_balance = fields.Numeric('Bank Balance', required=True,
+        digits=(16, Eval('currency_digits', 2)),
+        states=_STATES, depends=_DEPENDS + ['currency_digits'])
+    check_amount = fields.Function(fields.Numeric('Amount Checked',
+        digits=(16, Eval('currency_digits', 2)),
+        depends=['currency_digits']),
+        'get_check_amount')
+    diff = fields.Function(fields.Numeric('Diff',
+        digits=(16, Eval('currency_digits', 2)),
+        depends=['currency_digits']),
+        'get_diff')
     state = fields.Selection(STATES, 'State', readonly=True, required=True)
     logs = fields.One2Many('cash_bank.reconciliation.log_action',
         'resource', 'Logs')
@@ -128,6 +140,20 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
             return self.currency.digits
         return 2
 
+    def get_check_amount(self, name=None):
+        res = Decimal('0.0')
+        if self.lines:
+            for line in self.lines:
+                if line.amount and line.check:
+                    res += line.amount
+        return res
+
+    def get_diff(self, name=None):
+        res = Decimal('0.0')
+        bank_balance = \
+            self.bank_balance if self.bank_balance else Decimal('0.0')
+        return bank_balance - self.check_amount
+
     def get_rec_name(self, name):
         if self.number:
             return self.number
@@ -136,6 +162,17 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
     @classmethod
     def search_rec_name(cls, name, clause):
         return [('number',) + tuple(clause[1:])]
+
+    @fields.depends('lines', 'bank_balance')
+    def on_change_bank_balance(self):
+        self.check_amount = Decimal('0.0')
+        self.diff = Decimal('0.0')
+        self.check_amount = self.get_check_amount()
+        self.diff = self.get_diff()
+
+    @fields.depends(methods=['on_change_bank_balance'])
+    def on_change_lines(self):
+        self.on_change_bank_balance()
 
     @classmethod
     def create(cls, vlist):
@@ -188,8 +225,41 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
     @classmethod
     @ModelView.button
     def complete_lines(cls, reconciliations):
-        pass
+        for recon in reconciliations:
+            cls._complete_lines(recon)
 
+    @classmethod
+    def _complete_lines(cls, recon):
+        pool = Pool()
+        Line = pool.get('cash_bank.reconciliation.line')
+        Move = pool.get('account.move.line')
+
+        lines = []
+        move_ids = {}
+
+        for line in recon.lines:
+            if line.move_line:
+                move_ids[line.move_line.id] = line
+
+        moves = Move.search([
+            ('account', '=', recon.cash_bank.account),
+            ('move.date', '>=', recon.date_start),
+            ('move.date', '<=', recon.date_end),
+            ('move.company', '=', recon.company.id),
+            ('move.state', '=', 'posted'),
+        ])
+        for mv in moves:
+            if mv.id in move_ids:
+                line = move_ids[mv.id]
+            else:
+                line = Line()
+                line.move_line = mv
+            line.date = mv.date
+            line.amount = mv.debit - mv.credit
+            line.reconciliation = recon
+            lines.append(line)
+
+        Line.save(lines)
 
 class ReconciliationLine(ModelSQL, ModelView):
     'Bank Reconciliation Line'
@@ -256,7 +326,7 @@ class ReconciliationLine(ModelSQL, ModelView):
         self.receipt = None
         if self.move_line:
             self._get_move_line_data()
-            if self.move_line.move.receipt:
+            if self.move_line.move.origin:
                 self.receipt = self.move_line.move.receipt
 
     def _get_move_line_data(self):
@@ -272,8 +342,8 @@ class ReconciliationLine(ModelSQL, ModelView):
             return value
 
     def get_receipt(self, name=None):
-        if self.move_line and self.move_line.move.receipt:
-            return self.move_line.move.receipt.id
+        if self.move_line and self.move_line.move.origin:
+            return self.move_line.move.origin.id
 
 
 class ReconciliationLog(LogActionMixin):
