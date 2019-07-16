@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!-- This file is part of trytond-cash_bank_reconciliation module. The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<form>
+    <label name="reconciliation"/>
+    <field name="reconciliation" colspan="3"/>
+    <label name="date"/>
+    <field name="date"/>
+    <label name="move_line"/>
+    <field name="move_line"/>
+    <label name="receipt"/>
+    <field name="receipt"/>
+    <label name="description"/>
+    <field name="description"/>
+    <label name="move_description"/>
+    <field name="move_description"/>
+    <label name="amount"/>
+    <field name="amount"/>
+    <label name="check"/>
+    <field name="check"/>
+</form>

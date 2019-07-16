@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!-- This file is part of trytond-cash_bank_reconciliation module. The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<form col="6">
+    <label name="date"/>
+    <field name="date"/>
+    <label name="number"/>
+    <field name="number"/>
+    <label name="reference"/>
+    <field name="reference"/>
+    <label name="cash_bank"/>
+    <field name="cash_bank"/>
+    <notebook colspan="6">
+        <page name="lines">
+            <field name="lines" colspan="4"/>
+            <group col="4" colspan="4" id="group_buttons">
+                <label name="state"/>
+                <field name="state"/>
+                <group colspan="2" col="-1" id="buttons">
+                    <button name="cancel" icon="tryton-cancel"/>
+                    <button name="complete_lines"/>
+                    <button name="confirm" icon="tryton-ok"/>
+                </group>
+            </group>
+        </page>
+        <page name="note">
+            <field name="note" colspan="4" yexpand="1"/>
+        </page>
+        <page string="Info" id="info">
+            <label name="company"/>
+            <field name="company"/>
+            <label name="currency"/>
+            <field name="currency"/>
+            <field name="logs" colspan="4"
+                view_ids="log_action.log_view_tree,log_action.log_view_form"/>
+        </page>
+    </notebook>
+</form>
