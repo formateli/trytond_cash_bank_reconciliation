@@ -14,6 +14,9 @@ this repository contains the full copyright notices and license terms. -->
     <field name="date_start"/>
     <label name="date_end"/>
     <field name="date_end"/>
+    <label name="last_bank_balance"/>
+    <field name="last_bank_balance"/>
+    <newline/>
     <label name="bank_balance"/>
     <field name="bank_balance"/>
     <label name="check_amount"/>
@@ -27,6 +30,7 @@ this repository contains the full copyright notices and license terms. -->
                 <label name="state"/>
                 <field name="state"/>
                 <group colspan="2" col="-1" id="buttons">
+                    <button name="draft"/>
                     <button name="cancel" icon="tryton-cancel"/>
                     <button name="complete_lines"/>
                     <button name="confirm" icon="tryton-ok"/>

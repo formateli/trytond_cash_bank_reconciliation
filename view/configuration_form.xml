@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!-- This file is part of Tryton cash_bank_reconciliation module. The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<data>
+    <xpath expr="/form/field[@name='account_transfer']" position="after">
+        <newline/>
+        <separator string="Bank Reconciliation" id="reconciliation" colspan="4" />
+        <label name="reconciliation_seq"/>
+        <field name="reconciliation_seq"/>
+    </xpath>
+</data>

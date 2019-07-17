@@ -206,7 +206,7 @@ contains the full copyright notices and license terms. -->
 
         <record model="ir.model.button" id="reconciliation_complete_lines_button">
             <field name="name">complete_lines</field>
-            <field name="string">Complete</field>
+            <field name="string">Get lines</field>
             <field name="model" search="[('model', '=', 'cash_bank.reconciliation')]"/>
         </record>
         <record model="ir.model.button-res.group"

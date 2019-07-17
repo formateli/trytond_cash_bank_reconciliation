@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!-- This file is part of Tryton cash_bank_reconciliation module. The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data group="1">
+        <record model="ir.message" id="reconciliation_delete_draft">
+            <field name="text">Reconciliation "%(reconciliation)s" must be in "%(state)s" state for deletion.</field>
+        </record>
+        <record model="ir.message" id="reconciliation_diff">
+            <field name="text">Reconciliation "%(reconciliation)s" Diff must be zero.</field>
+        </record>
+        <record model="ir.message" id="reconciliation_move_line_posted">
+            <field name="text">Reconciliation line "%(line)s" of Reconciliation "%(reconciliation)s" is not in "Posted" state.</field>
+        </record>
+        <record model="ir.message" id="reconciliation_move_line_reconciliation">
+            <field name="text">Reconciliation line "%(line)s" of Reconciliation "%(reconciliation)s" already belongs to the Reconciliation "%(reconciliation2)s".</field>
+        </record>
+    </data>
+</tryton>

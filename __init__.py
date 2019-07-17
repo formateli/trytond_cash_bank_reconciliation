@@ -1,12 +1,20 @@
 #This file is part of Tryton cash_bank_reconciliation module. The COPYRIGHT file at the top level of
 #this repository contains the full copyright notices and license terms.
 from trytond.pool import Pool
+from . import configuration
+from . import cash_bank
 from . import reconciliation
+from . import account_move
 
 
 def register():
     Pool.register(
+        configuration.Configuration,
+        configuration.ConfigurationSequences,
+        cash_bank.CashBank,
+        cash_bank.CashBankDates,
         reconciliation.Reconciliation,
         reconciliation.ReconciliationLine,
         reconciliation.ReconciliationLog,
+        account_move.MoveLine,
         module='cash_bank_reconciliation', type_='model')
