@@ -13,6 +13,7 @@ def register():
         configuration.ConfigurationSequences,
         cash_bank.CashBank,
         cash_bank.CashBankDates,
+        cash_bank.Receipt,
         reconciliation.Reconciliation,
         reconciliation.ReconciliationLine,
         reconciliation.ReconciliationLog,

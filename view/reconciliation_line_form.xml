@@ -6,6 +6,8 @@ this repository contains the full copyright notices and license terms. -->
     <field name="reconciliation" colspan="3"/>
     <label name="date"/>
     <field name="date"/>
+    <label name="effective_date"/>
+    <field name="effective_date"/>
     <label name="move_line"/>
     <field name="move_line"/>
     <label name="receipt"/>
@@ -14,6 +16,9 @@ this repository contains the full copyright notices and license terms. -->
     <field name="description"/>
     <label name="move_description"/>
     <field name="move_description"/>
+    <label name="comment"/>
+    <field name="comment"/>
+    <newline/>
     <label name="amount"/>
     <field name="amount"/>
     <label name="check"/>

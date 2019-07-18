@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!-- This file is part of Tryton cash_bank_reconciliation module. The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<data>
+    <xpath expr="/form/notebook/page[@name='attachments']" position="after">
+        <page name="cash_bank_reconciliation">
+            <field name="cash_bank_reconciliation"/>
+            <newline/>
+            <label name="reconciliation_effective_date"/>
+            <field name="reconciliation_effective_date"/>
+            <label name="reconciliation_comment"/>
+            <field name="reconciliation_comment"/>
+        </page>
+    </xpath>
+</data>

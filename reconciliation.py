@@ -62,7 +62,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
         'on_change_with_currency_digits')
     number = fields.Char('Number', size=None, readonly=True, select=True)
     reference = fields.Char('Reference', size=None)
-    note = fields.Char('Note', size=None,
+    note = fields.Text('Note', size=None,
         states=_STATES, depends=_DEPENDS)
     date = fields.Date('Date', required=True,
         states=_STATES, depends=_DEPENDS)
@@ -248,6 +248,32 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
                         line=line.rec_name
                     ))
 
+    def write_to_move_line(self, set_none=False):
+        # This way we can modify account move lines that are in posted moves.
+        if not self.lines:
+            return
+
+        str_id = ''
+        for line in self.lines:
+            if not line.check:
+                continue
+            if str_id != '':
+                str_id += ','
+            str_id += str(line.move_line.id)
+        if str_id == '':
+            return
+        str_id = '(' + str_id + ')'
+
+        value = str(self.id)
+        if set_none:
+            value = 'NULL'
+
+        cursor = Transaction().connection.cursor()
+        sql = "UPDATE account_move_line SET cash_bank_reconciliation="
+        sql += value
+        sql += " WHERE id IN " + str_id
+        cursor.execute(sql)
+
     @classmethod
     def create(cls, vlist):
         reconciliations = super(Reconciliation, cls).create(vlist)
@@ -285,34 +311,24 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
     def draft(cls, reconciliations):
         write_log('Draft', reconciliations)
 
-    def write_to_move_line(self, set_none=False):
-        if not self.lines:
-            return
-
-        str_id = ''
-        for line in self.lines:
-            if str_id != '':
-                str_id += ','
-            str_id += str(line.move_line.id)
-        str_id = '(' + str_id + ')'
-
-        value = str(self.id)
-        if set_none:
-            value = 'NULL'
-
-        cursor = Transaction().connection.cursor()
-        sql = "UPDATE account_move_line SET cash_bank_reconciliation="
-        sql += value
-        sql += " WHERE id IN " + str_id
-        cursor.execute(sql)
-
     @classmethod
     @ModelView.button
     @Workflow.transition('confirmed')
     def confirm(cls, reconciliations):
+        pool = Pool()
+        Receipt = pool.get('cash_bank.receipt')
+        #receipts = []
         for recon in reconciliations:
             recon.verify()
             recon.write_to_move_line()
+            for line in recon.lines:
+                if line.check and line.receipt:
+                    line.receipt.cash_bank_reconciliation = line
+                    line.receipt.save()
+                    #receipts.append(line.receipt)
+        #for r in receipts:
+        #    print(r)
+        #Receipt.save(receipts)
         cls.set_number(reconciliations)
         write_log('Confirmed', reconciliations)
 
@@ -320,8 +336,16 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('cancel')
     def cancel(cls, reconciliations):
+        pool = Pool()
+        Receipt = pool.get('cash_bank.receipt')
+        rps = []
         for recon in reconciliations:
             recon.write_to_move_line(True)
+            for line in recon.lines:
+                if line.check and line.receipt:
+                    line.receipt.cash_bank_reconciliation = None
+                    rps.append(line.receipt)
+        Receipt.save(rps)
         write_log('Cancelled', reconciliations)
 
     @classmethod
@@ -400,6 +424,10 @@ class ReconciliationLine(ModelSQL, ModelView):
         }, depends=['currency_digits'])
     currency_digits = fields.Function(fields.Integer('Currency Digits'),
         'on_change_with_currency_digits')
+    effective_date = fields.Date('Effective date',
+        states=_STATES_LINE, depends=_DEPENDS_LINE)
+    comment = fields.Char('Comment',
+        states=_STATES_LINE, depends=_DEPENDS_LINE)
     description = fields.Function(fields.Char('Description'),
         'get_move_line_field')
     move_description = fields.Function(fields.Char('Move Description'),

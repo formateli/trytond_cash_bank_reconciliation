@@ -7,6 +7,8 @@ this repository contains the full copyright notices and license terms. -->
     <field name="receipt"/>
     <field name="move_description"/>
     <field name="description"/>
+    <field name="effective_date"/>
     <field name="amount"/>
     <field name="check"/>
+    <field name="comment"/>
 </tree>

@@ -10,4 +10,11 @@ contains the full copyright notices and license terms. -->
             <field name="name">cash_bank_form</field>
         </record>
     </data>
+    <data>
+        <record model="ir.ui.view" id="receipt_view_form">
+            <field name="model">cash_bank.receipt</field>
+            <field name="inherit" ref="cash_bank.receipt_view_form"/>
+            <field name="name">receipt_form</field>
+        </record>
+    </data>
 </tryton>

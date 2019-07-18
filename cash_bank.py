@@ -5,8 +5,9 @@ from trytond.model import ModelSQL, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.modules.company.model import (
     CompanyMultiValueMixin, CompanyValueMixin)
+from trytond.pyson import Eval, Not, Bool
 
-__all__ = ['CashBank' 'CashBankDates']
+__all__ = ['CashBank' 'CashBankDates', 'Receipt']
 
 
 class CashBank(CompanyMultiValueMixin, metaclass=PoolMeta):
@@ -30,3 +31,25 @@ class CashBankDates(ModelSQL, CompanyValueMixin):
     cash_bank = fields.Many2One(
         'cash_bank.cash_bank', 'Cash/Bank', ondelete='CASCADE', select=True)
     date_ignore = fields.Date('Ignore Lines before')
+
+
+class Receipt(metaclass=PoolMeta):
+    __name__ = "cash_bank.receipt"
+    cash_bank_reconciliation = fields.Many2One('cash_bank.reconciliation.line',
+        'Reconciliation')
+    reconciliation_effective_date = fields.Function(
+        fields.Date('Effective date'), 'get_reconciliation_field')
+    reconciliation_comment = fields.Function(
+        fields.Char('Comment'), 'get_reconciliation_field')
+
+    def get_reconciliation_field(self, name=None):
+        if self.cash_bank_reconciliation:
+            value = getattr(self.cash_bank_reconciliation, name[15:])
+            return value
+
+    @classmethod
+    def view_attributes(cls):
+        return super(Receipt, cls).view_attributes() + [
+            ('//page[@name="cash_bank_reconciliation"]', 'states', {
+                    'invisible': Not(Bool(Eval('cash_bank_reconciliation'))),
+                    })]
