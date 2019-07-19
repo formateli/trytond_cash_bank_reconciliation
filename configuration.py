@@ -11,7 +11,6 @@ __all__ = ['Configuration', 'ConfigurationSequences']
 
 class Configuration(metaclass=PoolMeta):
     __name__ = 'cash_bank.configuration'
-
     reconciliation_seq = fields.MultiValue(fields.Many2One(
         'ir.sequence', "Bank Reconciliation Sequence", required=True,
         domain=[
@@ -28,8 +27,7 @@ class Configuration(metaclass=PoolMeta):
         return super(Configuration, cls).multivalue_model(field)
 
 
-class ConfigurationSequences(ModelSQL, CompanyValueMixin):
-    'Configuration Sequences'
+class ConfigurationSequences(metaclass=PoolMeta):
     __name__ = 'cash_bank.configuration.sequences'
     reconciliation_seq = fields.Many2One(
         'ir.sequence', "Bank Reconciliation Sequence", required=True,
