@@ -4,7 +4,7 @@ from trytond.transaction import Transaction
 from trytond.pool import Pool
 from trytond.model import (
     Workflow, ModelView, ModelSQL, fields)
-from trytond.pyson import Eval, If, Or, Bool
+from trytond.pyson import Eval, If, Or, Bool, Not
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
 from trytond.modules.log_action import LogActionMixin, write_log
@@ -67,24 +67,30 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
     date = fields.Date('Date', required=True,
         states=_STATES, depends=_DEPENDS)
     date_start = fields.Date('Start Date', required=True,
-            states={
-                'readonly': Or(
-                        Eval('state') != 'draft',
-                        Bool(Eval('lines'))
-                    ),
-            }, depends=_DEPENDS + ['lines'])
+        states={
+            'readonly': Or(
+                    Eval('state') != 'draft',
+                    Bool(Eval('lines')),
+                    Not(Eval('is_first_reconciliation'))
+                ),
+        }, depends=_DEPENDS + ['lines'])
     date_end = fields.Date('End Date', required=True,
-            states={
-                'readonly': Or(
-                        Eval('state') != 'draft',
-                        Bool(Eval('lines'))
-                    ),
-            }, depends=_DEPENDS + ['lines'])
+        states={
+            'readonly': Or(
+                    Eval('state') != 'draft',
+                    Bool(Eval('lines'))
+                ),
+        }, depends=_DEPENDS + ['lines'])
     lines = fields.One2Many('cash_bank.reconciliation.line', 'reconciliation',
         'Lines', states=_STATES, depends=_DEPENDS)
     last_bank_balance = fields.Numeric('Last Bank Balance', required=True,
         digits=(16, Eval('currency_digits', 2)),
-        states=_STATES, depends=_DEPENDS + ['currency_digits'])
+        states={
+            'readonly': Or(
+                    Eval('state') != 'draft',
+                    Not(Eval('is_first_reconciliation'))
+                ),
+        }, depends=_DEPENDS + ['currency_digits'])
     bank_balance = fields.Numeric('Current Bank Balance', required=True,
         digits=(16, Eval('currency_digits', 2)),
         states=_STATES, depends=_DEPENDS + ['currency_digits'])
@@ -96,6 +102,8 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
         digits=(16, Eval('currency_digits', 2)),
         depends=['currency_digits']),
         'get_diff')
+    is_first_reconciliation = fields.Function(fields.Boolean('Active'),
+        'get_is_first_reconciliation')
     state = fields.Selection(STATES, 'State', readonly=True, required=True)
     logs = fields.One2Many('cash_bank.reconciliation.log_action',
         'resource', 'Logs')
@@ -155,6 +163,10 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
             return company.currency.digits
         return 2
 
+    @staticmethod
+    def default_is_first_reconciliation():
+        return True
+
     @fields.depends('currency')
     def on_change_with_currency_digits(self, name=None):
         if self.currency:
@@ -177,6 +189,14 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
             self.last_bank_balance if self.last_bank_balance else Decimal('0.0')
         return (bank_balance - last_bank_balance) - self.check_amount
 
+    def get_is_first_reconciliation(self, name):
+        last_reconciliation = self.search([
+                ('cash_bank', '=', self.cash_bank.id),
+            ])
+        if not last_reconciliation:
+            return True
+        return False
+
     def get_rec_name(self, name):
         if self.number:
             return self.number
@@ -194,15 +214,19 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
         self.diff = None
         self.date_start = None
         self.date_end = None
+        self.is_first_reconciliation = False
         if self.cash_bank:
             self.bank_balance = Decimal('0.0')
             self.date_start, self.last_bank_balance = \
-                self._get_last_reconciliation(self.cash_bank)            
+                self._get_last_reconciliation(self.cash_bank)
+            if self.date_start is None:
+                self.is_first_reconciliation = True
 
     @classmethod
     def _get_last_reconciliation(cls, cash_bank):
         last_reconciliation = cls.search([
             ('cash_bank', '=', cash_bank.id),
+            ('state', '=', 'confirmed'),
         ], order=[('date_start', 'DESC')], limit=1)
         if not last_reconciliation:
             return None, Decimal('0.0')
@@ -224,7 +248,37 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
     def on_change_lines(self):
         self.on_change_bank_balance()
 
+    def verify_is_last(self):
+        recons = self.search([
+                ('cash_bank', '=', self.cash_bank.id),
+                ('date_start', '>', self.date_start),
+                ('state', '=', 'confirmed'),
+            ])
+        if recons:
+            raise UserError(
+                gettext(
+                    'cash_bank_reconciliation.reconciliation_last',
+                    reconciliation=self.rec_name
+                ))
+
+    def verify_is_next(self):
+        if self.is_first_reconciliation:
+            return
+        recons = self.search([
+                ('cash_bank', '=', self.cash_bank.id),
+                ('date_end', '=', self.date_start - timedelta(days=1)),
+                ('state', '=', 'confirmed'),
+            ])
+        if not recons or len(recons) > 1:
+            raise UserError(
+                gettext(
+                    'cash_bank_reconciliation.reconciliation_next',
+                    reconciliation=self.rec_name
+                ))
+
     def verify(self):
+        self.verify_is_last()
+        self.verify_is_next()
         if self.diff != 0:
             raise UserError(
                 gettext(
@@ -317,18 +371,15 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
     def confirm(cls, reconciliations):
         pool = Pool()
         Receipt = pool.get('cash_bank.receipt')
-        #receipts = []
+        receipts = []
         for recon in reconciliations:
             recon.verify()
             recon.write_to_move_line()
             for line in recon.lines:
                 if line.check and line.receipt:
                     line.receipt.cash_bank_reconciliation = line
-                    line.receipt.save()
-                    #receipts.append(line.receipt)
-        #for r in receipts:
-        #    print(r)
-        #Receipt.save(receipts)
+                    receipts.append(line.receipt)
+        Receipt.save(receipts)
         cls.set_number(reconciliations)
         write_log('Confirmed', reconciliations)
 
@@ -340,6 +391,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
         Receipt = pool.get('cash_bank.receipt')
         rps = []
         for recon in reconciliations:
+            recon.verify_is_last()
             recon.write_to_move_line(True)
             for line in recon.lines:
                 if line.check and line.receipt:
@@ -486,8 +538,10 @@ class ReconciliationLine(ModelSQL, ModelView):
             return self.move_line.move.origin.id
 
     def get_rec_name(self, name):
-        if self.receipt:
-            return str(self.date) + '/' + self.receipt.rec_name 
+        if self.reconciliation:
+            return self.reconciliation.rec_name + ' (' + \
+                str(self.reconciliation.date_start) + ' - ' + \
+                str(self.reconciliation.date_end) + ')'
         return str(self.date)
 
 

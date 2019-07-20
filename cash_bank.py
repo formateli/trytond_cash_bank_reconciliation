@@ -24,6 +24,13 @@ class CashBank(CompanyMultiValueMixin, metaclass=PoolMeta):
             return pool.get('cash_bank.dates')
         return super(CashBank, cls).multivalue_model(field)
 
+    @classmethod
+    def view_attributes(cls):
+        return super(CashBank, cls).view_attributes() + [
+            ('//page[@id="reconciliation"]', 'states', {
+                    'invisible': Bool(Eval('type') == 'cash'),
+                    })]
+
 
 class CashBankDates(ModelSQL, CompanyValueMixin):
     "Cash/Bank dates"

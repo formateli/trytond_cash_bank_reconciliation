@@ -215,7 +215,7 @@ contains the full copyright notices and license terms. -->
             <field name="group" ref="group_cash_bank_reconciliation"/>
         </record>
 
-        <menuitem name="Bank Reconciliation" sequence="30" 
+        <menuitem name="Bank Reconciliation" sequence="50" 
             id="menu_cash_bank_reconciliation" parent="cash_bank.menu_cash_bank"
             action="act_reconciliation_form"/>
         <record model="ir.ui.menu-res.group"
