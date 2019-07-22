@@ -21,5 +21,8 @@ this repository contains the full copyright notices and license terms. -->
         <record model="ir.message" id="reconciliation_next">
             <field name="text">Reconciliation "%(reconciliation)s" is not the next one.</field>
         </record>
+        <record model="ir.message" id="acc_invalid_move">
+            <field name="text">Account Move can not be posted because account "%(account)s" has a confirmed bank reconciliation that invalidate the date.</field>
+        </record>
     </data>
 </tryton>

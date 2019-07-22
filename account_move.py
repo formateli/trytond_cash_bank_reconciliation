@@ -1,10 +1,37 @@
 # This file is part of Tryton cash_bank_reconciliation module.
 # The COPYRIGHT file at the top level of this repository
 # contains the full copyright notices and license terms.
-from trytond.model import fields
-from trytond.pool import PoolMeta
+from trytond.model import ModelView, fields
+from trytond.pool import Pool, PoolMeta
+from trytond.i18n import gettext
+from trytond.exceptions import UserError
 
-__all__ = ['MoveLine']
+__all__ = ['Move', 'MoveLine']
+
+
+class Move(metaclass=PoolMeta):
+    __name__ = 'account.move'
+
+    @classmethod
+    @ModelView.button
+    def post(cls, moves):
+        pool = Pool()
+        BankReconciliation = pool.get('cash_bank.reconciliation')
+        reconciliations = {} # Key: account, value: last reconc. date
+        for move in moves:
+            for line in move.lines:
+                if line.account.id not in reconciliations:
+                    reconciliations[line.account.id] = \
+                        BankReconciliation.last_cash_bank_reconciliation_date(
+                            line.account)
+                last_date = reconciliations[line.account.id]
+                if last_date and move.date <= last_date:
+                    raise UserError(
+                        gettext(
+                            'cash_bank_reconciliation.acc_invalid_move',
+                            account=line.account.rec_name
+                        ))
+        super(Move, cls).post(moves)
 
 
 class MoveLine(metaclass=PoolMeta):

@@ -6,11 +6,12 @@ from trytond.pool import Pool
 from trytond.tests.test_tryton import ModuleTestCase, with_transaction
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError
+from trytond.model.modelsql import SQLConstraintError
 from trytond.modules.company.tests import create_company, set_company
 from trytond.modules.account.tests import create_chart, get_fiscalyear
 from trytond.modules.cash_bank.tests import (
     create_cash_bank, create_sequence,
-    create_payment_method, create_fiscalyear)
+    create_journal, create_fiscalyear)
 import datetime
 from decimal import Decimal
 
@@ -52,8 +53,8 @@ class ReconciliationTestCase(ModuleTestCase):
                 account_transfer=account_transfer)
             config.save()
 
-            payment_method = create_payment_method(
-                company, 'journal_cash', account_cash)
+            journal = create_journal(company, 'journal_cash')
+
             sequence = create_sequence(
                 'Cash/Bank Sequence',
                 'cash_bank.receipt',
@@ -73,7 +74,7 @@ class ReconciliationTestCase(ModuleTestCase):
 
             bank = create_cash_bank(
                 company, 'Main Bank', 'bank',
-                payment_method, sequence
+                journal, account_cash, sequence
             )
             self.assertEqual(len(bank.receipt_types), 2)
 
@@ -144,6 +145,21 @@ class ReconciliationTestCase(ModuleTestCase):
 
             Receipt.post(rcps)
             Reconciliation.confirm([recon])
+
+            # Account moves can not be posted if a confirmed reconciliation
+            # invalidates them
+
+            new_date = date + datetime.timedelta(days=1)
+            receipt = self._get_receipt(
+                    company, bank, 'in', new_date,
+                    Decimal('99.0'), account_revenue)
+            receipt.save()
+            Receipt.confirm([receipt])
+
+            transaction.commit()
+            with self.assertRaises(UserError):
+                Receipt.post([receipt])
+            transaction.rollback()
 
     def _get_receipt(
             self, company, cash_bank, receipt_type, date, amount, account):

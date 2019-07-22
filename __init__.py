@@ -17,5 +17,6 @@ def register():
         reconciliation.Reconciliation,
         reconciliation.ReconciliationLine,
         reconciliation.ReconciliationLog,
+        account_move.Move,
         account_move.MoveLine,
         module='cash_bank_reconciliation', type_='model')

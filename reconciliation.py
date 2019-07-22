@@ -9,7 +9,7 @@ from trytond.i18n import gettext
 from trytond.exceptions import UserError
 from trytond.modules.log_action import LogActionMixin, write_log
 from decimal import Decimal
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 __all__ = ['Reconciliation', 'ReconciliationLine', 'ReconciliationLog']
 
@@ -222,6 +222,21 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
                 self._get_last_reconciliation(self.cash_bank)
             if self.date_start is None:
                 self.is_first_reconciliation = True
+
+    @classmethod
+    def last_cash_bank_reconciliation_date(cls, account):
+        pool = Pool()
+        CashBank = pool.get('cash_bank.cash_bank')
+
+        cash_bank = CashBank.search([
+            ('account', '=', account.id)
+        ])
+        if not cash_bank:
+            return
+
+        date, _ = cls._get_last_reconciliation(cash_bank[0])
+
+        return date
 
     @classmethod
     def _get_last_reconciliation(cls, cash_bank):
