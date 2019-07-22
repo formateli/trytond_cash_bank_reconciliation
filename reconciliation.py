@@ -3,7 +3,7 @@
 from trytond.transaction import Transaction
 from trytond.pool import Pool
 from trytond.model import (
-    Workflow, ModelView, ModelSQL, fields)
+    Workflow, ModelView, ModelSQL, fields, Unique)
 from trytond.pyson import Eval, If, Or, Bool, Not
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
@@ -192,7 +192,8 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
     def get_is_first_reconciliation(self, name):
         last_reconciliation = self.search([
                 ('cash_bank', '=', self.cash_bank.id),
-            ])
+                ('state', '=', 'confirmed'),
+            ], limit=1)
         if not last_reconciliation:
             return True
         return False
@@ -423,7 +424,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
             ('account', '=', recon.cash_bank.account),
             ('move.date', '<=', recon.date_end),
             ('move.company', '=', recon.company.id),
-            ('move.state', '=', 'posted'),
+            #('move.state', '=', 'posted'),
             ('cash_bank_reconciliation', '=', None),
         ]
         if recon.cash_bank.date_ignore:
@@ -457,10 +458,21 @@ class ReconciliationLine(ModelSQL, ModelView):
             'readonly': True,
         },
         domain=[
-            ('move.state', '=', 'posted'),
+            ('account', '=', Eval('account')),
+            ('move.date', '<=',
+                Eval('_parent_reconciliation', {}).get('date_end', None)),
             ('move.company', '=',
                 Eval('_parent_reconciliation', {}).get('company', -1)),
-        ])
+            If(Eval('reconciliation_state') == 'draft',
+                [],
+                [
+                    ('move.state', '=', 'posted'),
+                    ('move.cash_bank_reconciliation', '=', Eval('id'))
+                ]
+            )
+        ], depends=_DEPENDS_LINE + ['id', 'account'])
+    account = fields.Function(fields.Many2One('account.account', "Account"),
+        'get_account')
     receipt = fields.Function(fields.Many2One('cash_bank.receipt', 'Receipt'),
         'get_receipt')
     date = fields.Date('Date',
@@ -493,6 +505,13 @@ class ReconciliationLine(ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super(ReconciliationLine, cls).__setup__()
+        t = cls.__table__()
+        cls._sql_constraints += [
+            ('reconciliation_line_move_line_uniq', 
+                Unique(t, t.reconciliation, t.move_line),
+                'Account Move Line can appear just once in the Reconciliation.'),
+        ]
+
         cls._order = [
                 ('date', 'ASC'),
                 ('move_line.id', 'ASC')
@@ -533,16 +552,24 @@ class ReconciliationLine(ModelSQL, ModelView):
             value = getattr(self.move_line, name)
             return value
 
+    def get_account(self, name=None):
+        if self.reconciliation:
+            return self.reconciliation.cash_bank.account.id
+
     def get_receipt(self, name=None):
         if self.move_line and self.move_line.move.origin:
-            return self.move_line.move.origin.id
+            if self.move_line.move.origin.__class__.__name__ == \
+                    'cash_bank.receipt':
+                return self.move_line.move.origin.id
 
     def get_rec_name(self, name):
-        if self.reconciliation:
-            return self.reconciliation.rec_name + ' (' + \
-                str(self.reconciliation.date_start) + ' - ' + \
-                str(self.reconciliation.date_end) + ')'
-        return str(self.date)
+        show = self.reconciliation.rec_name
+        show += ' (' + str(self.reconciliation.date_start) + ' - '
+        show += str(self.reconciliation.date_end) + ') - '
+        show += str(self.date)
+        if self.receipt:
+            show += ' / '+ self.receipt.rec_name
+        return show
 
 
 class ReconciliationLog(LogActionMixin):
