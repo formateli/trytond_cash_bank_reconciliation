@@ -73,7 +73,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
                     Bool(Eval('lines')),
                     Not(Eval('is_first_reconciliation'))
                 ),
-        }, depends=_DEPENDS + ['lines'])
+        }, depends=_DEPENDS + ['lines', 'is_first_reconciliation'])
     date_end = fields.Date('End Date', required=True,
         states={
             'readonly': Or(
@@ -90,7 +90,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
                     Eval('state') != 'draft',
                     Not(Eval('is_first_reconciliation'))
                 ),
-        }, depends=_DEPENDS + ['currency_digits'])
+        }, depends=_DEPENDS + ['currency_digits', 'is_first_reconciliation'])
     bank_balance = fields.Numeric('Current Bank Balance', required=True,
         digits=(16, Eval('currency_digits', 2)),
         states=_STATES, depends=_DEPENDS + ['currency_digits'])
