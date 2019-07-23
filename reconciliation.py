@@ -235,7 +235,8 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
             return
 
         date, _ = cls._get_last_reconciliation(cash_bank[0])
-
+        if date:
+            date = date - timedelta(days=1)
         return date
 
     @classmethod

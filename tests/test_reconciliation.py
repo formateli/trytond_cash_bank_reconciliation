@@ -149,7 +149,20 @@ class ReconciliationTestCase(ModuleTestCase):
             # Account moves can not be posted if a confirmed reconciliation
             # invalidates them
 
-            new_date = date + datetime.timedelta(days=1)
+            # Same date
+            receipt = self._get_receipt(
+                    company, bank, 'in', date,
+                    Decimal('99.0'), account_revenue)
+            receipt.save()
+            Receipt.confirm([receipt])
+
+            transaction.commit()
+            with self.assertRaises(UserError):
+                Receipt.post([receipt])
+            transaction.rollback()
+
+            # Date before
+            new_date = date - datetime.timedelta(days=1)
             receipt = self._get_receipt(
                     company, bank, 'in', new_date,
                     Decimal('99.0'), account_revenue)
@@ -160,6 +173,15 @@ class ReconciliationTestCase(ModuleTestCase):
             with self.assertRaises(UserError):
                 Receipt.post([receipt])
             transaction.rollback()
+
+            # Date OK
+            new_date = date + datetime.timedelta(days=1)
+            receipt = self._get_receipt(
+                    company, bank, 'in', new_date,
+                    Decimal('99.0'), account_revenue)
+            receipt.save()
+            Receipt.confirm([receipt])
+            Receipt.post([receipt])
 
     def _get_receipt(
             self, company, cash_bank, receipt_type, date, amount, account):
