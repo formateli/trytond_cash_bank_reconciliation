@@ -440,7 +440,6 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
             ('account', '=', recon.cash_bank.account),
             ('move.date', '<=', recon.date_end),
             ('move.company', '=', recon.company.id),
-            #('move.state', '=', 'posted'),
             ('cash_bank_reconciliation', '=', None),
         ]
         if recon.cash_bank.date_ignore:
