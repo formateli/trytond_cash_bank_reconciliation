@@ -355,6 +355,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
     def delete(cls, reconciliations):
         for reconciliation in reconciliations:
             if reconciliation.state not in ['draft']:
+                write_log('Delete attempt', [reconciliation])
                 raise UserError(
                     gettext(
                         'cash_bank_reconciliation.reconciliation_delete_draft',
