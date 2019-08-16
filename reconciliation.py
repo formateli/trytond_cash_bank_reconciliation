@@ -106,7 +106,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
         'get_is_first_reconciliation')
     state = fields.Selection(STATES, 'State', readonly=True, required=True)
     logs = fields.One2Many('cash_bank.reconciliation.log_action',
-        'resource', 'Logs')
+        'resource', 'Logs', readonly=True)
 
     @classmethod
     def __setup__(cls):
