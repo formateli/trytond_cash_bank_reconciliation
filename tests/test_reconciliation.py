@@ -29,6 +29,8 @@ class ReconciliationTestCase(ModuleTestCase):
         Line = pool.get('cash_bank.reconciliation.line')
         Config = pool.get('cash_bank.configuration')
 
+        party = self._create_party('Party test', None)
+
         transaction = Transaction()
 
         company = create_company()
@@ -95,10 +97,10 @@ class ReconciliationTestCase(ModuleTestCase):
                     Decimal('400.0'), account_revenue),
                 self._get_receipt(
                     company, bank, 'out', date,
-                    Decimal('10.0'), account_expense),
+                    Decimal('10.0'), account_expense, party),
                 self._get_receipt(
                     company, bank, 'out', date,
-                    Decimal('20.0'), account_expense),
+                    Decimal('20.0'), account_expense, party),
             ]
             Receipt.save(rcps)
             Receipt.confirm(rcps)
@@ -184,7 +186,7 @@ class ReconciliationTestCase(ModuleTestCase):
             Receipt.post([receipt])
 
     def _get_receipt(
-            self, company, cash_bank, receipt_type, date, amount, account):
+            self, company, cash_bank, receipt_type, date, amount, account, party=None):
         pool = Pool()
         Receipt = pool.get('cash_bank.receipt')
         ReceiptType = pool.get('cash_bank.receipt_type')
@@ -197,6 +199,7 @@ class ReconciliationTestCase(ModuleTestCase):
         receipt = Receipt(
             company=company,
             cash_bank=cash_bank,
+            party=party,
             type=type_,
             date=date,
             cash=amount,
@@ -209,6 +212,22 @@ class ReconciliationTestCase(ModuleTestCase):
         )
 
         return receipt
+
+    @classmethod
+    def _create_party(cls, name, account):
+        pool = Pool()
+        Party = pool.get('party.party')
+        Address = pool.get('party.address')
+        addr = Address(
+            name=name,
+        )
+        party = Party(
+            name=name,
+            account_receivable=account,
+            addresses=[addr,],
+        )
+        party.save()
+        return party
 
 
 def suite():

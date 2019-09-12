@@ -21,9 +21,13 @@ class Move(metaclass=PoolMeta):
         for move in moves:
             for line in move.lines:
                 if line.account.id not in reconciliations:
-                    reconciliations[line.account.id] = \
+                    last_date = \
                         BankReconciliation.last_cash_bank_reconciliation_date(
                             line.account)
+                    if last_date is None:
+                        continue
+                    reconciliations[line.account.id] = last_date
+
                 last_date = reconciliations[line.account.id]
                 if last_date and move.date <= last_date:
                     raise UserError(
@@ -31,6 +35,7 @@ class Move(metaclass=PoolMeta):
                             'cash_bank_reconciliation.acc_invalid_move',
                             account=line.account.rec_name
                         ))
+
         super(Move, cls).post(moves)
 
 
