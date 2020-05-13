@@ -1,14 +1,13 @@
-# This file is part of cash_bank_reconciliation module. The COPYRIGHT file at the top level of
-# this repository contains the full copyright notices and license terms.
+# The COPYRIGHT file at the top level of this repository contains
+# the full copyright notices and license terms.
 import unittest
 import trytond.tests.test_tryton
 from trytond.pool import Pool
 from trytond.tests.test_tryton import ModuleTestCase, with_transaction
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError
-from trytond.model.modelsql import SQLConstraintError
 from trytond.modules.company.tests import create_company, set_company
-from trytond.modules.account.tests import create_chart, get_fiscalyear
+from trytond.modules.account.tests import create_chart
 from trytond.modules.cash_bank.tests import (
     create_cash_bank, create_sequence,
     create_journal, create_fiscalyear)
@@ -77,7 +76,7 @@ class ReconciliationTestCase(ModuleTestCase):
             bank = create_cash_bank(
                 company, 'Main Bank', 'bank',
                 journal, account_cash, sequence
-            )
+                )
             self.assertEqual(len(bank.receipt_types), 2)
 
             date = datetime.date.today()
@@ -113,7 +112,7 @@ class ReconciliationTestCase(ModuleTestCase):
                 date_end=date,
                 bank_balance=Decimal(600.0),
                 last_bank_balance=Decimal(0.0),
-            )
+                )
             recon.save()
 
             Reconciliation.complete_lines([recon])
@@ -129,8 +128,9 @@ class ReconciliationTestCase(ModuleTestCase):
             lines = Line.search([
                     ('reconciliation', '=', recon.id),
                     ('amount', 'in',
-                        [Decimal('100.0'), Decimal('200.0'), Decimal('300.0')]),
-                ])
+                        [Decimal('100.0'), Decimal('200.0'),
+                        Decimal('300.0')]),
+                    ])
             self.assertEqual(len(lines), 3)
             for line in lines:
                 line.check = True
@@ -185,13 +185,13 @@ class ReconciliationTestCase(ModuleTestCase):
             Receipt.confirm([receipt])
             Receipt.post([receipt])
 
-    def _get_receipt(
-            self, company, cash_bank, receipt_type, date, amount, account, party=None):
+    def _get_receipt(self, company, cash_bank, receipt_type,
+                     date, amount, account, party=None):
         pool = Pool()
         Receipt = pool.get('cash_bank.receipt')
         ReceiptType = pool.get('cash_bank.receipt_type')
         Line = pool.get('cash_bank.receipt.line')
-    
+
         type_ = ReceiptType.search([
             ('cash_bank', '=', cash_bank.id),
             ('type', '=', receipt_type)])[0]
@@ -203,13 +203,8 @@ class ReconciliationTestCase(ModuleTestCase):
             type=type_,
             date=date,
             cash=amount,
-            lines=[
-                    Line(
-                        account=account,
-                        amount=amount,
-                    )
-                ]
-        )
+            lines=[Line(account=account, amount=amount)]
+            )
 
         return receipt
 
@@ -218,14 +213,12 @@ class ReconciliationTestCase(ModuleTestCase):
         pool = Pool()
         Party = pool.get('party.party')
         Address = pool.get('party.address')
-        addr = Address(
-            name=name,
-        )
+        addr = Address(name=name)
         party = Party(
             name=name,
             account_receivable=account,
-            addresses=[addr,],
-        )
+            addresses=[addr]
+            )
         party.save()
         return party
 

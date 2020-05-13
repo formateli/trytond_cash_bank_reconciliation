@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
-<!-- This file is part of trytond-cash_bank_reconciliation module. 
-The COPYRIGHT file at the top level of this repository 
-contains the full copyright notices and license terms. -->
+<!-- The COPYRIGHT file at the top level of this repository contains
+the full copyright notices and license terms.. -->
 <tryton>
     <data>
         <record model="res.group" id="group_cash_bank_reconciliation_admin">
@@ -215,7 +214,7 @@ contains the full copyright notices and license terms. -->
             <field name="group" ref="group_cash_bank_reconciliation"/>
         </record>
 
-        <menuitem name="Bank Reconciliation" sequence="50" 
+        <menuitem name="Bank Reconciliation" sequence="50"
             id="menu_cash_bank_reconciliation" parent="cash_bank.menu_cash_bank"
             action="act_reconciliation_form"/>
         <record model="ir.ui.menu-res.group"

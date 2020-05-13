@@ -1,13 +1,12 @@
-# This file is part of Tryton cash_bank_reconciliation module.
-# The COPYRIGHT file at the top level of this repository
-# contains the full copyright notices and license terms.
+# The COPYRIGHT file at the top level of this repository contains
+# the full copyright notices and license terms.
 from trytond.model import ModelSQL, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.modules.company.model import (
     CompanyMultiValueMixin, CompanyValueMixin)
 from trytond.pyson import Eval, Not, Bool
 
-__all__ = ['CashBank' 'CashBankDates', 'Receipt']
+__all__ = ['CashBank', 'CashBankDates', 'Receipt']
 
 
 class CashBank(CompanyMultiValueMixin, metaclass=PoolMeta):

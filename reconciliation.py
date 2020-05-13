@@ -1,5 +1,5 @@
-#This file is part of tryton-cash_bank_reconciliation module. The COPYRIGHT file at the top level of this
-#repository contains the full copyright notices and license terms.
+# The COPYRIGHT file at the top level of this repository contains
+# the full copyright notices and license terms.
 from trytond.transaction import Transaction
 from trytond.pool import Pool
 from trytond.model import (
@@ -23,18 +23,18 @@ _STATES = {
     'readonly': Eval('state') != 'draft',
 }
 
-_DEPENDS=['state']
+_DEPENDS = ['state']
 
 _STATES_LINE = {
     'readonly': Eval('reconciliation_state') != 'draft',
 }
 
-_DEPENDS_LINE=['reconciliation_state']
+_DEPENDS_LINE = ['reconciliation_state']
 
 
 class Reconciliation(Workflow, ModelSQL, ModelView):
     "Bank Reconciliation"
-    __name__ = "cash_bank.reconciliation" 
+    __name__ = "cash_bank.reconciliation"
     company = fields.Many2One('company.company', 'Company', required=True,
         states={
             'readonly': True,
@@ -50,12 +50,13 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
                 'readonly': Or(
                         Eval('state') != 'draft',
                         Bool(Eval('lines'))
-                    ),
-            },
+                        ),
+                },
             domain=[
                 ('company', '=', Eval('company')),
                 ('type', '=', 'bank')
-            ], depends=_DEPENDS + ['company', 'lines'])
+                ],
+            depends=_DEPENDS + ['company', 'lines'])
     currency = fields.Many2One('currency.currency', 'Currency', required=True,
         states={'readonly': True})
     currency_digits = fields.Function(fields.Integer('Currency Digits'),
@@ -72,15 +73,17 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
                     Eval('state') != 'draft',
                     Bool(Eval('lines')),
                     Not(Eval('is_first_reconciliation'))
-                ),
-        }, depends=_DEPENDS + ['lines', 'is_first_reconciliation'])
+                    ),
+            },
+            depends=_DEPENDS + ['lines', 'is_first_reconciliation'])
     date_end = fields.Date('End Date', required=True,
         states={
             'readonly': Or(
                     Eval('state') != 'draft',
                     Bool(Eval('lines'))
-                ),
-        }, depends=_DEPENDS + ['lines'])
+                    ),
+            },
+        depends=_DEPENDS + ['lines'])
     lines = fields.One2Many('cash_bank.reconciliation.line', 'reconciliation',
         'Lines', states=_STATES, depends=_DEPENDS)
     last_bank_balance = fields.Numeric('Last Bank Balance', required=True,
@@ -89,8 +92,9 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
             'readonly': Or(
                     Eval('state') != 'draft',
                     Not(Eval('is_first_reconciliation'))
-                ),
-        }, depends=_DEPENDS + ['currency_digits', 'is_first_reconciliation'])
+                    ),
+            },
+        depends=_DEPENDS + ['currency_digits', 'is_first_reconciliation'])
     bank_balance = fields.Numeric('Current Bank Balance', required=True,
         digits=(16, Eval('currency_digits', 2)),
         states=_STATES, depends=_DEPENDS + ['currency_digits'])
@@ -119,7 +123,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
                 ('confirmed', 'cancel'),
                 ('cancel', 'draft'),
             )
-        )
+            )
 
         cls._buttons.update({
             'cancel': {
@@ -134,7 +138,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
                     'tryton-clear', 'tryton-go-previous'),
                 },
             'complete_lines': {
-                    'invisible': Eval('state') != 'draft',
+                'invisible': Eval('state') != 'draft',
                 },
             })
 
@@ -182,18 +186,17 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
         return res
 
     def get_diff(self, name=None):
-        res = Decimal('0.0')
-        bank_balance = \
-            self.bank_balance if self.bank_balance else Decimal('0.0')
-        last_bank_balance = \
-            self.last_bank_balance if self.last_bank_balance else Decimal('0.0')
+        bank_balance = self.bank_balance if self.bank_balance \
+            else Decimal('0.0')
+        last_bank_balance = self.last_bank_balance if self.last_bank_balance \
+            else Decimal('0.0')
         return (bank_balance - last_bank_balance) - self.check_amount
 
     def get_is_first_reconciliation(self, name):
         last_reconciliation = self.search([
                 ('cash_bank', '=', self.cash_bank.id),
                 ('state', '=', 'confirmed'),
-            ], limit=1)
+                ], limit=1)
         if not last_reconciliation:
             return True
         return False
@@ -270,7 +273,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
                 ('cash_bank', '=', self.cash_bank.id),
                 ('date_start', '>', self.date_start),
                 ('state', '=', 'confirmed'),
-            ])
+                ])
         if recons:
             raise UserError(
                 gettext(
@@ -285,7 +288,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
                 ('cash_bank', '=', self.cash_bank.id),
                 ('date_end', '=', self.date_start - timedelta(days=1)),
                 ('state', '=', 'confirmed'),
-            ])
+                ])
         if not recons or len(recons) > 1:
             raise UserError(
                 gettext(
@@ -303,19 +306,22 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
                     reconciliation=self.rec_name
                 ))
         for line in self.lines:
-            if line.move_line.move.state != 'posted':
+            mvl = line.move_line
+            if mvl.move.state != 'posted':
                 raise UserError(
                     gettext(
-                        'cash_bank_reconciliation.reconciliation_move_line_posted',
+                        'cash_bank_reconciliation.'
+                        'reconciliation_move_line_posted',
                         reconciliation=self.rec_name,
                         line=line.rec_name
                     ))
-            if line.move_line.cash_bank_reconciliation:
+            if mvl.cash_bank_reconciliation:
                 raise UserError(
                     gettext(
-                        'cash_bank_reconciliation.reconciliation_move_line_reconciliation',
+                        'cash_bank_reconciliation.'
+                        'reconciliation_move_line_reconciliation',
                         reconciliation=self.rec_name,
-                        reconciliation2=line.move_line.cash_bank_reconciliation.rec_name,
+                        reconciliation2=mvl.cash_bank_reconciliation.rec_name,
                         line=line.rec_name
                     ))
 
@@ -358,7 +364,8 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
                 write_log('Delete attempt', [reconciliation])
                 raise UserError(
                     gettext(
-                        'cash_bank_reconciliation.reconciliation_delete_draft',
+                        'cash_bank_reconciliation.'
+                        'reconciliation_delete_draft',
                         reconciliation=reconciliation.rec_name,
                         state='Draft'
                     ))
@@ -442,11 +449,11 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
             ('move.date', '<=', recon.date_end),
             ('move.company', '=', recon.company.id),
             ('cash_bank_reconciliation', '=', None),
-        ]
+            ]
         if recon.cash_bank.date_ignore:
             domain.append(
                 ('move.date', '>', recon.cash_bank.date_ignore)
-            )
+                )
 
         moves = Move.search(domain)
         for mv in moves:
@@ -472,7 +479,7 @@ class ReconciliationLine(ModelSQL, ModelView):
     move_line = fields.Many2One('account.move.line', 'Move line',
         states={
             'readonly': True,
-        },
+            },
         domain=[
             ('account', '=', Eval('account')),
             ('move.date', '<=',
@@ -523,17 +530,19 @@ class ReconciliationLine(ModelSQL, ModelView):
         super(ReconciliationLine, cls).__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
-            ('reconciliation_line_move_line_uniq', 
+            ('reconciliation_line_move_line_uniq',
                 Unique(t, t.reconciliation, t.move_line),
-                'Account Move Line can appear just once in the Reconciliation.'),
-        ]
+             'Account Move Line can appear just once '
+             'in the Reconciliation.'),
+            ]
 
         cls._order = [
                 ('date', 'ASC'),
                 ('move_line.id', 'ASC')
-            ]
+                ]
 
-    @fields.depends('reconciliation', '_parent_reconciliation.currency_digits')
+    @fields.depends('reconciliation',
+                    '_parent_reconciliation.currency_digits')
     def on_change_with_currency_digits(self, name=None):
         if self.reconciliation:
             return self.reconciliation.currency_digits
@@ -584,12 +593,12 @@ class ReconciliationLine(ModelSQL, ModelView):
         show += str(self.reconciliation.date_end) + ') - '
         show += str(self.date)
         if self.receipt:
-            show += ' / '+ self.receipt.rec_name
+            show += ' / ' + self.receipt.rec_name
         return show
 
 
 class ReconciliationLog(LogActionMixin):
     "Reconciliation Logs"
-    __name__ = "cash_bank.reconciliation.log_action" 
+    __name__ = "cash_bank.reconciliation.log_action"
     resource = fields.Many2One('cash_bank.reconciliation',
         'Reconciliation', ondelete='CASCADE', select=True)

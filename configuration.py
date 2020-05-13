@@ -1,6 +1,5 @@
-# This file is part of trytond-cash_bank_reconciliation module.
-# The COPYRIGHT file at the top level of this repository
-# contains the full copyright notices and license terms.
+# The COPYRIGHT file at the top level of this repository contains
+# the full copyright notices and license terms.
 from trytond.pool import Pool, PoolMeta
 from trytond.model import fields
 from trytond.pyson import Eval

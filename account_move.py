@@ -1,6 +1,5 @@
-# This file is part of Tryton cash_bank_reconciliation module.
-# The COPYRIGHT file at the top level of this repository
-# contains the full copyright notices and license terms.
+# The COPYRIGHT file at the top level of this repository contains
+# the full copyright notices and license terms.
 from trytond.model import ModelView, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.i18n import gettext
@@ -17,7 +16,7 @@ class Move(metaclass=PoolMeta):
     def post(cls, moves):
         pool = Pool()
         BankReconciliation = pool.get('cash_bank.reconciliation')
-        reconciliations = {} # Key: account, value: last reconc. date
+        reconciliations = {}  # Key: account, value: last reconc. date
         for move in moves:
             for line in move.lines:
                 if line.account.id not in reconciliations:
