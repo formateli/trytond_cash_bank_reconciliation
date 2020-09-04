@@ -1,0 +1,352 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:account.move.line,cash_bank_reconciliation:"
+msgid "Reconciliation"
+msgstr "Conciliación"
+
+msgctxt "field:cash_bank.cash_bank,date_ignore:"
+msgid "Ignore Lines before"
+msgstr "Ignorar Líneas antes del"
+
+msgctxt "field:cash_bank.cash_bank,dates:"
+msgid "Dates"
+msgstr "Fechas"
+
+msgctxt "field:cash_bank.configuration,reconciliation_seq:"
+msgid "Bank Reconciliation Sequence"
+msgstr "Secuencia de Conciliación Bancaria"
+
+msgctxt "field:cash_bank.configuration.sequences,reconciliation_seq:"
+msgid "Bank Reconciliation Sequence"
+msgstr "Secuencia de Conciliación Bancaria"
+
+msgctxt "field:cash_bank.dates,cash_bank:"
+msgid "Cash/Bank"
+msgstr "Efectivo/Banco"
+
+msgctxt "field:cash_bank.dates,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:cash_bank.dates,date_ignore:"
+msgid "Ignore Lines before"
+msgstr "Ignorar Líneas antes del"
+
+msgctxt "field:cash_bank.receipt,cash_bank_reconciliation:"
+msgid "Reconciliation"
+msgstr "Conciliación"
+
+msgctxt "field:cash_bank.receipt,reconciliation_comment:"
+msgid "Comment"
+msgstr "Comentario"
+
+msgctxt "field:cash_bank.receipt,reconciliation_effective_date:"
+msgid "Effective date"
+msgstr "Fecha efectiva"
+
+msgctxt "field:cash_bank.reconciliation,bank_balance:"
+msgid "Current Bank Balance"
+msgstr "Saldo Bancario Actual"
+
+msgctxt "field:cash_bank.reconciliation,cash_bank:"
+msgid "Bank"
+msgstr "Banco"
+
+msgctxt "field:cash_bank.reconciliation,check_amount:"
+msgid "Amount Checked"
+msgstr "Monto Verificado"
+
+msgctxt "field:cash_bank.reconciliation,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:cash_bank.reconciliation,currency:"
+msgid "Currency"
+msgstr "Moneda"
+
+msgctxt "field:cash_bank.reconciliation,currency_digits:"
+msgid "Currency Digits"
+msgstr "Dígitos de Moneda"
+
+msgctxt "field:cash_bank.reconciliation,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:cash_bank.reconciliation,date_end:"
+msgid "End Date"
+msgstr "Fecha Final"
+
+msgctxt "field:cash_bank.reconciliation,date_start:"
+msgid "Start Date"
+msgstr "Fecha de Inicio"
+
+msgctxt "field:cash_bank.reconciliation,diff:"
+msgid "Diff"
+msgstr "Diferencia"
+
+msgctxt "field:cash_bank.reconciliation,is_first_reconciliation:"
+msgid "Active"
+msgstr "Activo"
+
+msgctxt "field:cash_bank.reconciliation,last_bank_balance:"
+msgid "Last Bank Balance"
+msgstr "Último Saldo Bancario"
+
+#, fuzzy
+msgctxt "field:cash_bank.reconciliation,lines:"
+msgid "Lines"
+msgstr "Líneas"
+
+msgctxt "field:cash_bank.reconciliation,logs:"
+msgid "Logs"
+msgstr "Registros"
+
+msgctxt "field:cash_bank.reconciliation,note:"
+msgid "Note"
+msgstr "Nota"
+
+msgctxt "field:cash_bank.reconciliation,number:"
+msgid "Number"
+msgstr "Número"
+
+msgctxt "field:cash_bank.reconciliation,reference:"
+msgid "Reference"
+msgstr "Referencia"
+
+msgctxt "field:cash_bank.reconciliation,state:"
+msgid "State"
+msgstr "Estado"
+
+#, fuzzy
+msgctxt "field:cash_bank.reconciliation.line,account:"
+msgid "Account"
+msgstr "Cuenta"
+
+msgctxt "field:cash_bank.reconciliation.line,amount:"
+msgid "Amount"
+msgstr "Monto"
+
+msgctxt "field:cash_bank.reconciliation.line,check:"
+msgid "Check"
+msgstr "Verificado"
+
+msgctxt "field:cash_bank.reconciliation.line,comment:"
+msgid "Comment"
+msgstr "Comentario"
+
+msgctxt "field:cash_bank.reconciliation.line,currency_digits:"
+msgid "Currency Digits"
+msgstr "Dígitos de Moneda"
+
+msgctxt "field:cash_bank.reconciliation.line,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:cash_bank.reconciliation.line,description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:cash_bank.reconciliation.line,effective_date:"
+msgid "Effective date"
+msgstr "Fecha efectiva"
+
+#, fuzzy
+msgctxt "field:cash_bank.reconciliation.line,move_description:"
+msgid "Move Description"
+msgstr "Descripción de Asiento"
+
+msgctxt "field:cash_bank.reconciliation.line,move_line:"
+msgid "Move line"
+msgstr "Línea de Asiento"
+
+msgctxt "field:cash_bank.reconciliation.line,receipt:"
+msgid "Receipt"
+msgstr "Recibo"
+
+msgctxt "field:cash_bank.reconciliation.line,reconciliation:"
+msgid "Reconciliation"
+msgstr "Conciliación"
+
+msgctxt "field:cash_bank.reconciliation.line,reconciliation_state:"
+msgid "Reconciliation State"
+msgstr "Estado de Conciliación"
+
+msgctxt "field:cash_bank.reconciliation.log_action,action:"
+msgid "Action"
+msgstr "Acción"
+
+msgctxt "field:cash_bank.reconciliation.log_action,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:cash_bank.reconciliation.log_action,key:"
+msgid "Key"
+msgstr "Llave"
+
+msgctxt "field:cash_bank.reconciliation.log_action,message:"
+msgid "Message"
+msgstr "Mensaje"
+
+msgctxt "field:cash_bank.reconciliation.log_action,resource:"
+msgid "Reconciliation"
+msgstr "Conciliación"
+
+msgctxt "field:cash_bank.reconciliation.log_action,user:"
+msgid "User"
+msgstr "Usuario"
+
+msgctxt "field:cash_bank.reconciliation.log_action,variables:"
+msgid "Variables"
+msgstr "Variables"
+
+msgctxt "model:cash_bank.dates,name:"
+msgid "Cash/Bank dates"
+msgstr "Fechas de Efectivo/Banco"
+
+msgctxt "model:cash_bank.reconciliation,name:"
+msgid "Bank Reconciliation"
+msgstr "Conciliación Bancaria"
+
+msgctxt "model:cash_bank.reconciliation.line,name:"
+msgid "Bank Reconciliation Line"
+msgstr "Línea de Conciliación Bancaria"
+
+msgctxt "model:cash_bank.reconciliation.log_action,name:"
+msgid "Reconciliation Logs"
+msgstr "Registros de Conciliación"
+
+msgctxt "model:ir.action,name:act_reconciliation_form"
+msgid "Reconciliation"
+msgstr "Conciliación"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_reconciliation_form_domain_all"
+msgid "All"
+msgstr "Todos"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_reconciliation_form_domain_cancel"
+msgid "Cancel"
+msgstr "Cancelado"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_reconciliation_form_domain_confirmed"
+msgid "Confirmed"
+msgstr "Confirmado"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_reconciliation_form_domain_draft"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "model:ir.message,text:acc_invalid_move"
+msgid ""
+"Account Move can not be posted because account \"%(account)s\" has a "
+"confirmed bank reconciliation that invalidate the date."
+msgstr ""
+"El Asiento de la Cuenta no se puede contabilizar porque la cuenta "
+"\"%(account)s\" tiene una conciliación bancaria confirmada que invalida la "
+"fecha."
+
+msgctxt "model:ir.message,text:reconciliation_delete_draft"
+msgid ""
+"Reconciliation \"%(reconciliation)s\" must be in \"%(state)s\" state for "
+"deletion."
+msgstr ""
+"La Conciliación \"%(reconciliation)s\" debe estar en el estado \"%(state)s\""
+" para eliminarse."
+
+msgctxt "model:ir.message,text:reconciliation_diff"
+msgid "Reconciliation \"%(reconciliation)s\" Diff must be zero."
+msgstr "La Diferencia en la Conciliación \"%(reconciliation)s\" debe ser cero."
+
+msgctxt "model:ir.message,text:reconciliation_last"
+msgid "Reconciliation \"%(reconciliation)s\" is not the last one."
+msgstr "La Conciliación \"%(reconciliation)s\" no es la última."
+
+msgctxt "model:ir.message,text:reconciliation_move_line_posted"
+msgid ""
+"Reconciliation line \"%(line)s\" of Reconciliation \"%(reconciliation)s\" is"
+" not in \"Posted\" state."
+msgstr ""
+"Línea de Conciliación \"%(line)s\" de la Conciliación \"%(reconciliation)s\""
+" no esta en estado \"Posted\"."
+
+msgctxt "model:ir.message,text:reconciliation_move_line_reconciliation"
+msgid ""
+"Reconciliation line \"%(line)s\" of Reconciliation \"%(reconciliation)s\" "
+"already belongs to the Reconciliation \"%(reconciliation2)s\"."
+msgstr ""
+"Línea de Conciliación \"%(line)s\" de la Conciliación \"%(reconciliation)s\""
+" ya pertenece a la Conciliación \"%(reconciliation2)s\"."
+
+msgctxt "model:ir.message,text:reconciliation_next"
+msgid "Reconciliation \"%(reconciliation)s\" is not the next one."
+msgstr "La Conciliación \"%(reconciliation)s\" no es la siguiente."
+
+#, fuzzy
+msgctxt "model:ir.model.button,string:reconciliation_cancel_button"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "model:ir.model.button,string:reconciliation_complete_lines_button"
+msgid "Get lines"
+msgstr "Obtener líneas"
+
+msgctxt "model:ir.model.button,string:reconciliation_confirm_button"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "model:ir.model.button,string:reconciliation_draft_button"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "model:ir.sequence.type,name:sequence_type_cash_bank_reconciliation"
+msgid "Cash and Bank Reconciliation"
+msgstr "Conciliación de Efectivo y Banco"
+
+msgctxt "model:ir.ui.menu,name:menu_cash_bank_reconciliation"
+msgid "Bank Reconciliation"
+msgstr "Conciliación Bancaria"
+
+msgctxt "model:res.group,name:group_cash_bank_reconciliation"
+msgid "Cash & Bank Reconciliation"
+msgstr "Conciliación de Efectivo & Banco"
+
+msgctxt "model:res.group,name:group_cash_bank_reconciliation_admin"
+msgid "Cash & Bank Reconciliation Admin"
+msgstr "Administrador de Conciliación de Efectivo y Banco"
+
+msgctxt "selection:cash_bank.reconciliation,state:"
+msgid "Canceled"
+msgstr "Cancelado"
+
+msgctxt "selection:cash_bank.reconciliation,state:"
+msgid "Confirmed"
+msgstr "Confirmado"
+
+msgctxt "selection:cash_bank.reconciliation,state:"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "selection:cash_bank.reconciliation.line,reconciliation_state:"
+msgid "Canceled"
+msgstr "Cancelado"
+
+msgctxt "selection:cash_bank.reconciliation.line,reconciliation_state:"
+msgid "Confirmed"
+msgstr "Confirmado"
+
+msgctxt "selection:cash_bank.reconciliation.line,reconciliation_state:"
+msgid "Draft"
+msgstr "Draft"
+
+msgctxt "view:cash_bank.cash_bank:"
+msgid "Reconciliation"
+msgstr "Conciliación"
+
+msgctxt "view:cash_bank.reconciliation:"
+msgid "Info"
+msgstr "Información\t"
