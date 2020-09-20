@@ -1,3 +1,4 @@
+# This file is part of Cash & Bank Reconciliation module.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 from trytond.transaction import Transaction
@@ -11,7 +12,6 @@ from trytond.modules.log_action import LogActionMixin, write_log
 from decimal import Decimal
 from datetime import timedelta
 
-__all__ = ['Reconciliation', 'ReconciliationLine', 'ReconciliationLog']
 
 STATES = [
     ('draft', 'Draft'),
@@ -354,14 +354,14 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
     @classmethod
     def create(cls, vlist):
         reconciliations = super(Reconciliation, cls).create(vlist)
-        write_log('Created', reconciliations)
+        write_log('log_action.msg_created', reconciliations)
         return reconciliations
 
     @classmethod
     def delete(cls, reconciliations):
         for reconciliation in reconciliations:
             if reconciliation.state not in ['draft']:
-                write_log('Delete attempt', [reconciliation])
+                write_log('log_action.msg_deletion_attempt', [reconciliation])
                 raise UserError(
                     gettext(
                         'cash_bank_reconciliation.'
@@ -388,7 +388,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('draft')
     def draft(cls, reconciliations):
-        write_log('Draft', reconciliations)
+        write_log('log_action.msg_draft', reconciliations)
 
     @classmethod
     @ModelView.button
@@ -406,7 +406,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
                     receipts.append(line.receipt)
         Receipt.save(receipts)
         cls.set_number(reconciliations)
-        write_log('Confirmed', reconciliations)
+        write_log('log_action.msg_confirmed', reconciliations)
 
     @classmethod
     @ModelView.button
@@ -423,7 +423,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
                     line.receipt.cash_bank_reconciliation = None
                     rps.append(line.receipt)
         Receipt.save(rps)
-        write_log('Cancelled', reconciliations)
+        write_log('log_action.msg_cancelled', reconciliations)
 
     @classmethod
     @ModelView.button

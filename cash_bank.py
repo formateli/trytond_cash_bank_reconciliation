@@ -1,3 +1,4 @@
+# This file is part of Cash & Bank Reconciliation module.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 from trytond.model import ModelSQL, fields
@@ -6,12 +7,9 @@ from trytond.modules.company.model import (
     CompanyMultiValueMixin, CompanyValueMixin)
 from trytond.pyson import Eval, Not, Bool
 
-__all__ = ['CashBank', 'CashBankDates', 'Receipt']
-
 
 class CashBank(CompanyMultiValueMixin, metaclass=PoolMeta):
     __name__ = 'cash_bank.cash_bank'
-
     date_ignore = fields.MultiValue(fields.Date('Ignore Lines before'))
     dates = fields.One2Many(
         'cash_bank.dates', 'cash_bank', 'Dates')

@@ -1,11 +1,10 @@
+# This file is part of Cash & Bank Reconciliation module.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 from trytond.model import ModelView, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
-
-__all__ = ['Move', 'MoveLine']
 
 
 class Move(metaclass=PoolMeta):
