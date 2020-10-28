@@ -10,7 +10,7 @@ from trytond.exceptions import UserError
 from trytond.modules.company.tests import create_company, set_company
 from trytond.modules.account.tests import create_chart
 from trytond.modules.cash_bank.tests import (
-    create_cash_bank, create_sequence,
+    create_bank_account, create_cash_bank, create_sequence,
     create_journal, create_fiscalyear)
 import datetime
 from decimal import Decimal
@@ -74,9 +74,14 @@ class ReconciliationTestCase(ModuleTestCase):
             config.reconciliation_seq = sequence_reconciliation
             config.save()
 
+            _, bank_account = create_bank_account(
+                party_bank=self._create_party('Party Bank', None),
+                party_owner=company.party)
+
             bank = create_cash_bank(
                 company, 'Main Bank', 'bank',
-                journal, account_cash, sequence
+                journal, account_cash, sequence,
+                bank_account
                 )
             self.assertEqual(len(bank.receipt_types), 2)
 
