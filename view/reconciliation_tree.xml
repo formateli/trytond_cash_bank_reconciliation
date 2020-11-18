@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!-- This file is part of Cash & Bank Reconciliation module.
+The COPYRIGHT file at the top level of this repository contains
+the full copyright notices and license terms. -->
+<tree>
+    <field name="cash_bank"/>
+    <field name="date_start"/>
+    <field name="date_end"/>
+    <field name="number"/>
+    <field name="company"/>
+</tree>
