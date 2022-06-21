@@ -374,14 +374,14 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
     @classmethod
     def set_number(cls, reconciliations):
         pool = Pool()
-        Sequence = pool.get('ir.sequence')
         Config = pool.get('cash_bank.configuration')
         config = Config(1)
         for reconciliation in reconciliations:
             if reconciliation.number:
                 continue
-            reconciliation.number = \
-                Sequence.get_id(config.reconciliation_seq.id)
+            reconciliation.number = config.get_multivalue(
+                'reconciliation_seq', company=reconciliation.company.id).get()
+
         cls.save(reconciliations)
 
     @classmethod
@@ -490,7 +490,7 @@ class ReconciliationLine(ModelSQL, ModelView):
                 [],
                 [
                     ('move.state', '=', 'posted'),
-                    ('move.cash_bank_reconciliation', '=', Eval('id'))
+                    ('cash_bank_reconciliation', '=', Eval('id'))
                 ]
             )
         ], depends=_DEPENDS_LINE + ['id', 'account'])
