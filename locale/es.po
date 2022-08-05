@@ -311,8 +311,8 @@ msgid "Cash and Bank Reconciliation"
 msgstr "Caja y Banco Conciliación"
 
 msgctxt "model:res.group,name:group_cash_bank_reconciliation_admin"
-msgid "Cash and Bank Reconciliation"
-msgstr "Administrador Caja y Banco Conciliación"
+msgid "Cash and Bank Reconciliation Admin"
+msgstr "Caja y Banco Conciliación Administrador"
 
 msgctxt "selection:cash_bank.reconciliation,state:"
 msgid "Canceled"
