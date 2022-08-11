@@ -6,6 +6,7 @@ the full copyright notices and license terms. -->
     <field name="reconciliation"/>
     <field name="date"/>
     <field name="receipt"/>
+    <field name="party"/>
     <field name="move_description"/>
     <field name="description"/>
     <field name="effective_date"/>

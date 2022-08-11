@@ -498,6 +498,8 @@ class ReconciliationLine(ModelSQL, ModelView):
         'get_account')
     receipt = fields.Function(fields.Many2One('cash_bank.receipt', 'Receipt'),
         'get_receipt')
+    party = fields.Function(fields.Many2One('party.party', 'Party'),
+        'get_party')
     date = fields.Date('Date',
         states={
             'required': True,
@@ -586,6 +588,15 @@ class ReconciliationLine(ModelSQL, ModelView):
             if self.move_line.move.origin.__class__.__name__ == \
                     'cash_bank.receipt':
                 return self.move_line.move.origin.id
+
+    def get_party(self, name=None):
+        if (self.move_line and self.move_line.cash_bank_receipt_line and
+                self.move_line.cash_bank_receipt_line[0].party):
+            return self.move_line.cash_bank_receipt_line[0].party.id
+        if self.move_line and self.move_line.party:
+            return self.move_line.party.id
+        if self.receipt and self.receipt.party:
+            return self.receipt.party.id
 
     def get_rec_name(self, name):
         show = self.reconciliation.rec_name
