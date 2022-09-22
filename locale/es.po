@@ -58,6 +58,10 @@ msgctxt "field:cash_bank.reconciliation,check_amount:"
 msgid "Amount Checked"
 msgstr "Monto Verificado"
 
+msgctxt "field:cash_bank.reconciliation,uncheck_amount:"
+msgid "Amount Unchecked"
+msgstr "Monto No Verificado"
+
 msgctxt "field:cash_bank.reconciliation,company:"
 msgid "Company"
 msgstr "Empresa"

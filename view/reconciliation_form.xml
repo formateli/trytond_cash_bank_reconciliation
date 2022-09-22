@@ -45,7 +45,10 @@ the full copyright notices and license terms. -->
             <label name="company"/>
             <field name="company"/>
             <label name="currency"/>
-            <field name="currency"/>
+	    <field name="currency"/>
+            <label name="uncheck_amount"/>
+	    <field name="uncheck_amount"/>
+	    <newline/>
             <field name="logs" colspan="4"
                 view_ids="log_action.log_view_tree,log_action.log_view_form"/>
         </page>

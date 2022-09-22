@@ -102,6 +102,10 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
         digits=(16, Eval('currency_digits', 2)),
         depends=['currency_digits']),
         'get_check_amount')
+    uncheck_amount = fields.Function(fields.Numeric('Amount Unchecked',
+        digits=(16, Eval('currency_digits', 2)),
+        depends=['currency_digits']),
+        'get_uncheck_amount')
     diff = fields.Function(fields.Numeric('Diff',
         digits=(16, Eval('currency_digits', 2)),
         depends=['currency_digits']),
@@ -185,6 +189,14 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
                     res += line.amount
         return res
 
+    def get_uncheck_amount(self, name=None):
+        res = Decimal('0.0')
+        if self.lines:
+            for line in self.lines:
+                if line.amount and not line.check:
+                    res += line.amount
+        return res
+
     def get_diff(self, name=None):
         bank_balance = self.bank_balance if self.bank_balance \
             else Decimal('0.0')
@@ -215,6 +227,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
         self.bank_balance = None
         self.last_bank_balance = None
         self.check_amount = None
+        self.uncheck_amount = None
         self.diff = None
         self.date_start = None
         self.date_end = None
@@ -256,8 +269,10 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
     @fields.depends('lines', 'bank_balance', 'last_bank_balance')
     def on_change_bank_balance(self):
         self.check_amount = Decimal('0.0')
+        self.uncheck_amount = Decimal('0.0')
         self.diff = Decimal('0.0')
         self.check_amount = self.get_check_amount()
+        self.uncheck_amount = self.get_uncheck_amount()
         self.diff = self.get_diff()
 
     @fields.depends(methods=['on_change_bank_balance'])
