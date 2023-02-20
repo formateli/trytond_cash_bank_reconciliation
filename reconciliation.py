@@ -42,8 +42,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
         domain=[
             ('id', If(Eval('context', {}).contains('company'), '=', '!='),
                 Eval('context', {}).get('company', -1)),
-            ],
-        select=True)
+            ])
     cash_bank = fields.Many2One('cash_bank.cash_bank',
             'Bank', required=True,
             states={
@@ -61,7 +60,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
         states={'readonly': True})
     currency_digits = fields.Function(fields.Integer('Currency Digits'),
         'on_change_with_currency_digits')
-    number = fields.Char('Number', size=None, readonly=True, select=True)
+    number = fields.Char('Number', size=None, readonly=True)
     reference = fields.Char('Reference', size=None)
     note = fields.Text('Note', size=None,
         states=_STATES, depends=_DEPENDS)
@@ -627,4 +626,4 @@ class ReconciliationLog(LogActionMixin):
     "Reconciliation Logs"
     __name__ = "cash_bank.reconciliation.log_action"
     resource = fields.Many2One('cash_bank.reconciliation',
-        'Reconciliation', ondelete='CASCADE', select=True)
+        'Reconciliation', ondelete='CASCADE')
