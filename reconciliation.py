@@ -85,6 +85,18 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
         depends=_DEPENDS + ['lines'])
     lines = fields.One2Many('cash_bank.reconciliation.line', 'reconciliation',
         'Lines', states=_STATES, depends=_DEPENDS)
+    lines_in_check = fields.One2Many('cash_bank.reconciliation.line', 'reconciliation',
+            'In Check', states={'readonly': True}, depends=_DEPENDS,
+        filter=[('amount', '>', 0), ('check', '=', True)])
+    lines_in_uncheck = fields.One2Many('cash_bank.reconciliation.line', 'reconciliation',
+        'In Uncheck', states={'readonly': True}, depends=_DEPENDS,
+        filter=[('amount', '>', 0), ('check', '!=', True)])
+    lines_out_check = fields.One2Many('cash_bank.reconciliation.line', 'reconciliation',
+        'Out Check', states={'readonly': True}, depends=_DEPENDS,
+        filter=[('amount', '<', 0), ('check', '=', True)])
+    lines_out_uncheck = fields.One2Many('cash_bank.reconciliation.line', 'reconciliation',
+        'Out Uncheck', states={'readonly': True}, depends=_DEPENDS,
+        filter=[('amount', '<', 0), ('check', '!=', True)])
     last_bank_balance = fields.Numeric('Last Bank Balance', required=True,
         digits=(16, Eval('currency_digits', 2)),
         states={

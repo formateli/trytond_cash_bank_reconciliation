@@ -102,6 +102,22 @@ msgctxt "field:cash_bank.reconciliation,lines:"
 msgid "Lines"
 msgstr "Líneas"
 
+msgctxt "field:cash_bank.reconciliation,lines_in_check:"
+msgid "In Check"
+msgstr "Entrada Seleccionadas"
+
+msgctxt "field:cash_bank.reconciliation,lines_in_uncheck:"
+msgid "In Uncheck"
+msgstr "Entrada No Seleccionadas"
+
+msgctxt "field:cash_bank.reconciliation,lines_out_check:"
+msgid "Out Check"
+msgstr "Salida Seleccionadas"
+
+msgctxt "field:cash_bank.reconciliation,lines_out_uncheck:"
+msgid "Out Uncheck"
+msgstr "Salida No Seleccionadas"
+
 msgctxt "field:cash_bank.reconciliation,logs:"
 msgid "Logs"
 msgstr "Registros"
@@ -349,3 +365,7 @@ msgstr "Conciliación"
 msgctxt "view:cash_bank.reconciliation:"
 msgid "Info"
 msgstr "información"
+
+msgctxt "view:cash_bank.reconciliation:"
+msgid "Filters"
+msgstr "Filtros"
