@@ -474,6 +474,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
             ('account', '=', recon.cash_bank.account),
             ('move.date', '<=', recon.date_end),
             ('move.company', '=', recon.company.id),
+            ('move.state', '=', 'posted'),
             ('cash_bank_reconciliation', '=', None),
             ]
         if recon.cash_bank.date_ignore:
@@ -512,10 +513,10 @@ class ReconciliationLine(ModelSQL, ModelView):
                 Eval('_parent_reconciliation', {}).get('date_end', None)),
             ('move.company', '=',
                 Eval('_parent_reconciliation', {}).get('company', -1)),
+            ('move.state', '=', 'posted'),
             If(Eval('reconciliation_state') == 'draft',
                 [],
                 [
-                    ('move.state', '=', 'posted'),
                     ('cash_bank_reconciliation', '=', Eval('id'))
                 ]
             )
