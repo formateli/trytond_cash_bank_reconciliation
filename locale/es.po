@@ -282,6 +282,14 @@ msgctxt "model:ir.message,text:reconciliation_last"
 msgid "Reconciliation \"%(reconciliation)s\" is not the last one."
 msgstr "La Conciliación \"%(reconciliation)s\" no es la última."
 
+
+msgctxt "model:ir.message,text:reconciliation_end_date_incorrect"
+msgid "The end date of reconciliation \"%(reconciliation)s\" is incorrect."
+msgstr "La fecha final de la conciliación \"%(reconciliation)s\" es incorrecta."
+
+
+
+
 msgctxt "model:ir.message,text:reconciliation_move_line_posted"
 msgid ""
 "Reconciliation line \"%(line)s\" of Reconciliation \"%(reconciliation)s\" is"

@@ -32,6 +32,12 @@ _STATES_LINE = {
 _DEPENDS_LINE = ['reconciliation_state']
 
 
+def get_month_last_date(start_date):
+    next_month = start_date.replace(day=28) + timedelta(days=4)
+    res = next_month - timedelta(days=next_month.day)
+    return res
+
+
 class Reconciliation(Workflow, ModelSQL, ModelView):
     "Bank Reconciliation"
     __name__ = "cash_bank.reconciliation"
@@ -77,10 +83,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
             depends=_DEPENDS + ['lines', 'is_first_reconciliation'])
     date_end = fields.Date('End Date', required=True,
         states={
-            'readonly': Or(
-                    Eval('state') != 'draft',
-                    Bool(Eval('lines'))
-                    ),
+            'readonly': Eval('state') != 'draft'
             },
         depends=_DEPENDS + ['lines'])
     lines = fields.One2Many('cash_bank.reconciliation.line', 'reconciliation',
@@ -322,9 +325,20 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
                     reconciliation=self.rec_name
                 ))
 
+    def verify_end_date(self):
+        last_month_date = get_month_last_date(self.date_start)
+        if self.date_end > last_month_date or self.date_end < self.date_start:
+            raise UserError(
+                    gettext(
+                        'cash_bank_reconciliation.'
+                        'reconciliation_end_date_incorrect',
+                        reconciliation=self.rec_name
+                    ))
+
     def verify(self):
         self.verify_is_last()
         self.verify_is_next()
+        self.verify_end_date()
         if self.diff != 0:
             raise UserError(
                 gettext(
@@ -466,13 +480,24 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
         lines = []
         move_ids = {}
 
+        recon.verify_end_date()
+
+        last_month_date = get_month_last_date(recon.date_start)
+        if recon.date_end > last_month_date:
+            raise UserError(
+                    gettext(
+                        'cash_bank_reconciliation.'
+                        'reconciliation_end_date_incorrect',
+                        reconciliation=recon.rec_name
+                    ))
+
         for line in recon.lines:
             if line.move_line:
                 move_ids[line.move_line.id] = line
 
         domain = [
             ('account', '=', recon.cash_bank.account),
-            ('move.date', '<=', recon.date_end),
+            ('move.date', '<=', last_month_date),
             ('move.company', '=', recon.company.id),
             ('move.state', '=', 'posted'),
             ('cash_bank_reconciliation', '=', None),
@@ -509,8 +534,7 @@ class ReconciliationLine(ModelSQL, ModelView):
             },
         domain=[
             ('account', '=', Eval('account')),
-            ('move.date', '<=',
-                Eval('_parent_reconciliation', {}).get('date_end', None)),
+            ('move.date', '<=', Eval('month_last_date')),
             ('move.company', '=',
                 Eval('_parent_reconciliation', {}).get('company', -1)),
             ('move.state', '=', 'posted'),
@@ -532,6 +556,8 @@ class ReconciliationLine(ModelSQL, ModelView):
             'required': True,
             'readonly': True,
         })
+    month_last_date = fields.Function(fields.Date('Last day of month'),
+        'on_change_with_month_last_date')
     amount = fields.Numeric('Amount',
         digits=(16, Eval('currency_digits', 2)),
         states={
@@ -576,6 +602,12 @@ class ReconciliationLine(ModelSQL, ModelView):
         if self.reconciliation:
             return self.reconciliation.currency_digits
         return 2
+
+    @fields.depends('reconciliation',
+            '_parent_reconciliation.date_start')
+    def on_change_with_month_last_date(self, name=None):
+        if self.reconciliation and self.reconciliation.date_start:
+            return get_month_last_date(self.reconciliation.date_start)
 
     @fields.depends('reconciliation', '_parent_reconciliation.state')
     def on_change_with_reconciliation_state(self, name=None):

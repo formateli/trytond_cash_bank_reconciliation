@@ -19,6 +19,9 @@ the full copyright notices and license terms. -->
         <record model="ir.message" id="reconciliation_last">
             <field name="text">Reconciliation "%(reconciliation)s" is not the last one.</field>
         </record>
+        <record model="ir.message" id="reconciliation_end_date_incorrect">
+            <field name="text">The end date of reconciliation "%(reconciliation)s" is incorrect.</field>
+        </record>
         <record model="ir.message" id="reconciliation_next">
             <field name="text">Reconciliation "%(reconciliation)s" is not the next one.</field>
         </record>
