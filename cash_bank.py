@@ -33,7 +33,7 @@ class CashBankDates(ModelSQL, CompanyValueMixin):
     "Cash/Bank dates"
     __name__ = 'cash_bank.dates'
     cash_bank = fields.Many2One(
-        'cash_bank.cash_bank', 'Cash/Bank', ondelete='CASCADE', select=True)
+        'cash_bank.cash_bank', 'Cash/Bank', ondelete='CASCADE')
     date_ignore = fields.Date('Ignore Lines before')
 
 

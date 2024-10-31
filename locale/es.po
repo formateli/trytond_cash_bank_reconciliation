@@ -58,6 +58,10 @@ msgctxt "field:cash_bank.reconciliation,check_amount:"
 msgid "Amount Checked"
 msgstr "Monto Verificado"
 
+msgctxt "field:cash_bank.reconciliation,uncheck_amount:"
+msgid "Amount Unchecked"
+msgstr "Monto No Verificado"
+
 msgctxt "field:cash_bank.reconciliation,company:"
 msgid "Company"
 msgstr "Empresa"
@@ -97,6 +101,22 @@ msgstr "Ultimo Saldo Banco"
 msgctxt "field:cash_bank.reconciliation,lines:"
 msgid "Lines"
 msgstr "Líneas"
+
+msgctxt "field:cash_bank.reconciliation,lines_in_check:"
+msgid "In Check"
+msgstr "Entrada Seleccionadas"
+
+msgctxt "field:cash_bank.reconciliation,lines_in_uncheck:"
+msgid "In Uncheck"
+msgstr "Entrada No Seleccionadas"
+
+msgctxt "field:cash_bank.reconciliation,lines_out_check:"
+msgid "Out Check"
+msgstr "Salida Seleccionadas"
+
+msgctxt "field:cash_bank.reconciliation,lines_out_uncheck:"
+msgid "Out Uncheck"
+msgstr "Salida No Seleccionadas"
 
 msgctxt "field:cash_bank.reconciliation,logs:"
 msgid "Logs"
@@ -262,6 +282,14 @@ msgctxt "model:ir.message,text:reconciliation_last"
 msgid "Reconciliation \"%(reconciliation)s\" is not the last one."
 msgstr "La Conciliación \"%(reconciliation)s\" no es la última."
 
+
+msgctxt "model:ir.message,text:reconciliation_end_date_incorrect"
+msgid "The end date of reconciliation \"%(reconciliation)s\" is incorrect."
+msgstr "La fecha final de la conciliación \"%(reconciliation)s\" es incorrecta."
+
+
+
+
 msgctxt "model:ir.message,text:reconciliation_move_line_posted"
 msgid ""
 "Reconciliation line \"%(line)s\" of Reconciliation \"%(reconciliation)s\" is"
@@ -311,8 +339,8 @@ msgid "Cash and Bank Reconciliation"
 msgstr "Caja y Banco Conciliación"
 
 msgctxt "model:res.group,name:group_cash_bank_reconciliation_admin"
-msgid "Cash and Bank Reconciliation"
-msgstr "Administrador Caja y Banco Conciliación"
+msgid "Cash and Bank Reconciliation Admin"
+msgstr "Caja y Banco Conciliación Administrador"
 
 msgctxt "selection:cash_bank.reconciliation,state:"
 msgid "Canceled"
@@ -345,3 +373,7 @@ msgstr "Conciliación"
 msgctxt "view:cash_bank.reconciliation:"
 msgid "Info"
 msgstr "información"
+
+msgctxt "view:cash_bank.reconciliation:"
+msgid "Filters"
+msgstr "Filtros"

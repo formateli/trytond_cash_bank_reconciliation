@@ -26,7 +26,6 @@ the full copyright notices and license terms. -->
 
         <record model="ir.sequence.type" id="sequence_type_cash_bank_reconciliation">
             <field name="name">Cash and Bank Reconciliation</field>
-            <field name="code">cash_bank.reconciliation</field>
         </record>
         <record model="ir.sequence.type-res.group"
             id="sequence_type_cash_bank_reconciliation_group_admin">
@@ -89,6 +88,15 @@ the full copyright notices and license terms. -->
         </record>
 
 
+	<!-- line filters -->
+
+        <record model="ir.ui.view" id="reconciliation_line_filter_view_tree">
+            <field name="model">cash_bank.reconciliation.line</field>
+            <field name="type">tree</field>
+            <field name="name">reconciliation_line_filter_tree</field>
+        </record>
+
+
         <!-- Reconciliation -->
 
         <record model="ir.ui.view" id="reconciliation_view_form">
@@ -134,7 +142,7 @@ the full copyright notices and license terms. -->
             <field name="domain"
                 eval="[('state', '=', 'confirmed'), ('company', If( And (Eval('context', {}).contains('company'), Eval('context', {}).get('company', None) != None), '=', '!=') , Eval('context', {}).get('company', -1))]"
                 pyson="1"/>
-            <field name="count" eval="True"/>
+            <field name="count" eval="False"/>
             <field name="act_window" ref="act_reconciliation_form"/>
         </record>
         <record model="ir.action.act_window.domain" id="act_reconciliation_form_domain_cancel">

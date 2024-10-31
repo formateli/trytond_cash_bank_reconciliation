@@ -51,27 +51,27 @@ class ReconciliationTestCase(ModuleTestCase):
                     ('name', '=', 'Main Expense'),
                     ])
 
-            config = Config(
-                account_transfer=account_transfer)
-            config.save()
-
             journal = create_journal(company, 'journal_cash')
 
             sequence = create_sequence(
-                'Cash/Bank Sequence',
-                'cash_bank.receipt',
+                'Cash/Bank Receipt Sequence',
+                'Cash and Bank Receipt',
                 company)
             sequence_convertion = create_sequence(
                 'Cash/Bank Convertion',
-                'cash_bank.convertion',
+                'Cash and Bank Convertion',
                 company)
             sequence_reconciliation = create_sequence(
                 'Cash/Bank Reconciliation',
-                'cash_bank.reconciliation',
+                'Cash and Bank Reconciliation',
                 company)
 
-            config.convertion_seq = sequence_convertion
-            config.reconciliation_seq = sequence_reconciliation
+            config = Config(
+                account_transfer=account_transfer,
+                convertion_seq=sequence_convertion,
+                reconciliation_seq=sequence_reconciliation
+                )
+
             config.save()
 
             _, bank_account = create_bank_account(
@@ -209,7 +209,7 @@ class ReconciliationTestCase(ModuleTestCase):
             type=type_,
             date=date,
             cash=amount,
-            lines=[Line(account=account, amount=amount)]
+            lines=[Line(account=account, amount=amount, type='move_line')]
             )
 
         return receipt
@@ -229,8 +229,4 @@ class ReconciliationTestCase(ModuleTestCase):
         return party
 
 
-def suite():
-    suite = trytond.tests.test_tryton.suite()
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(
-        ReconciliationTestCase))
-    return suite
+del ModuleTestCase

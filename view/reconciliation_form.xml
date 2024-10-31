@@ -38,6 +38,26 @@ the full copyright notices and license terms. -->
                 </group>
             </group>
         </page>
+	<page string="Filters" id="filters">
+	    <notebook colspan="6">
+		<page name='lines_in_check'>
+		    <field name="lines_in_check" colspan="4"
+	                view_ids="cash_bank_reconciliation.reconciliation_line_filter_view_tree,cash_bank_reconciliation.reconciliation_line_view_form"/>
+	        </page>
+		<page name='lines_in_uncheck'>
+			<field name="lines_in_uncheck" colspan="4"
+	                view_ids="cash_bank_reconciliation.reconciliation_line_filter_view_tree,cash_bank_reconciliation.reconciliation_line_view_form"/>
+	        </page>
+		<page name='lines_out_check'>
+			<field name="lines_out_check" colspan="4"
+	                view_ids="cash_bank_reconciliation.reconciliation_line_filter_view_tree,cash_bank_reconciliation.reconciliation_line_view_form"/>
+	        </page>
+		<page name='lines_out_uncheck'>
+			<field name="lines_out_uncheck" colspan="4"
+	                view_ids="cash_bank_reconciliation.reconciliation_line_filter_view_tree,cash_bank_reconciliation.reconciliation_line_view_form"/>
+	        </page>
+            </notebook>
+        </page>
         <page name="note">
             <field name="note" colspan="4" yexpand="1"/>
         </page>
@@ -45,7 +65,10 @@ the full copyright notices and license terms. -->
             <label name="company"/>
             <field name="company"/>
             <label name="currency"/>
-            <field name="currency"/>
+	    <field name="currency"/>
+            <label name="uncheck_amount"/>
+	    <field name="uncheck_amount"/>
+	    <newline/>
             <field name="logs" colspan="4"
                 view_ids="log_action.log_view_tree,log_action.log_view_form"/>
         </page>

@@ -3,18 +3,19 @@
 # the full copyright notices and license terms.
 from trytond.pool import Pool, PoolMeta
 from trytond.model import fields
-from trytond.pyson import Eval
+from trytond.pyson import Eval, Id
 
 
 class Configuration(metaclass=PoolMeta):
     __name__ = 'cash_bank.configuration'
     reconciliation_seq = fields.MultiValue(fields.Many2One(
-        'ir.sequence', "Bank Reconciliation Sequence", required=True,
-        domain=[
-            ('company', 'in',
-                [Eval('context', {}).get('company', -1), None]),
-            ('code', '=', 'cash_bank.reconciliation'),
-        ]))
+            'ir.sequence', "Bank Reconciliation Sequence",
+            domain=[
+                ('company', 'in',
+                    [Eval('context', {}).get('company', -1), None]),
+                ('sequence_type', '=',
+                    Id('cash_bank_reconciliation', 'sequence_type_cash_bank_reconciliation')),
+                ]))
 
     @classmethod
     def multivalue_model(cls, field):
@@ -29,6 +30,8 @@ class ConfigurationSequences(metaclass=PoolMeta):
     reconciliation_seq = fields.Many2One(
         'ir.sequence', "Bank Reconciliation Sequence",
         domain=[
-            ('company', 'in', [Eval('company', -1), None]),
-            ('code', '=', 'cash_bank.reconciliation'),
-        ], depends=['company'])
+            ('company', 'in',
+                [Eval('context', {}).get('company', -1), None]),
+            ('sequence_type', '=',
+                Id('cash_bank_reconciliation', 'sequence_type_cash_bank_reconciliation')),
+            ], depends=['company'])
