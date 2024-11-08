@@ -334,6 +334,7 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
                         'reconciliation_end_date_incorrect',
                         reconciliation=self.rec_name
                     ))
+        return last_month_date
 
     def verify(self):
         self.verify_is_last()
@@ -480,9 +481,9 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
         lines = []
         move_ids = {}
 
-        recon.verify_end_date()
+        last_month_date = recon.verify_end_date()
 
-        last_month_date = get_month_last_date(recon.date_start)
+        #last_month_date = get_month_last_date(recon.date_start)
         if recon.date_end > last_month_date:
             raise UserError(
                     gettext(
@@ -534,7 +535,7 @@ class ReconciliationLine(ModelSQL, ModelView):
             },
         domain=[
             ('account', '=', Eval('account')),
-            ('move.date', '<=', Eval('month_last_date')),
+            ('move.date', '<=', Eval('month_last_date', None)),
             ('move.company', '=',
                 Eval('_parent_reconciliation', {}).get('company', -1)),
             ('move.state', '=', 'posted'),

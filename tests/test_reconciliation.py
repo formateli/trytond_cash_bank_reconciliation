@@ -122,6 +122,10 @@ class ReconciliationTestCase(ModuleTestCase):
             recon.save()
 
             Reconciliation.complete_lines([recon])
+            self.assertEqual(len(recon.lines), 0) # No posted lines
+
+            Receipt.post(rcps)
+            Reconciliation.complete_lines([recon])
             self.assertEqual(len(recon.lines), 6)
 
             transaction.commit()
@@ -145,11 +149,6 @@ class ReconciliationTestCase(ModuleTestCase):
 
             self.assertEqual(recon.diff, Decimal('0.0'))
             transaction.commit()
-
-            with self.assertRaises(UserError):
-                # Account move lines are not posted
-                Reconciliation.confirm([recon])
-            transaction.rollback()
 
             Receipt.post(rcps)
             Reconciliation.confirm([recon])
