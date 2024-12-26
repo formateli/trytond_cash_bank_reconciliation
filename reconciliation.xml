@@ -42,14 +42,14 @@ the full copyright notices and license terms. -->
         <!-- Logs -->
 
         <record model="ir.model.access" id="access_group_log">
-            <field name="model" search="[('model', '=', 'cash_bank.reconciliation.log_action')]"/>
+	    <field name="model">cash_bank.reconciliation.log_action</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_group_log_admin">
-            <field name="model" search="[('model', '=', 'cash_bank.reconciliation.log_action')]"/>
+	    <field name="model">cash_bank.reconciliation.log_action</field>
             <field name="group" ref="res.group_admin"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -72,14 +72,14 @@ the full copyright notices and license terms. -->
         </record>
 
         <record model="ir.model.access" id="access_reconciliation_line">
-            <field name="model" search="[('model', '=', 'cash_bank.reconciliation.line')]"/>
+	    <field name="model">cash_bank.reconciliation.line</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_reconciliation_line_group_cash_bank_reconciliation">
-            <field name="model" search="[('model', '=', 'cash_bank.reconciliation.line')]"/>
+	    <field name="model">cash_bank.reconciliation.line</field>
             <field name="group" ref="group_cash_bank_reconciliation"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -164,14 +164,14 @@ the full copyright notices and license terms. -->
         </record>
 
         <record model="ir.model.access" id="access_reconciliation">
-            <field name="model" search="[('model', '=', 'cash_bank.reconciliation')]"/>
+	    <field name="model">cash_bank.reconciliation</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_reconciliation_group_cash_bank_reconciliation">
-            <field name="model" search="[('model', '=', 'cash_bank.reconciliation')]"/>
+	    <field name="model">cash_bank.reconciliation</field>
             <field name="group" ref="group_cash_bank_reconciliation"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -182,7 +182,7 @@ the full copyright notices and license terms. -->
         <record model="ir.model.button" id="reconciliation_draft_button">
             <field name="name">draft</field>
             <field name="string">Draft</field>
-            <field name="model" search="[('model', '=', 'cash_bank.reconciliation')]"/>
+	    <field name="model">cash_bank.reconciliation</field>
         </record>
         <record model="ir.model.button-res.group"
                 id="reconciliation_draft_button_group_cash_bank_reconciliation">
@@ -193,7 +193,7 @@ the full copyright notices and license terms. -->
         <record model="ir.model.button" id="reconciliation_confirm_button">
             <field name="name">confirm</field>
             <field name="string">Confirm</field>
-            <field name="model" search="[('model', '=', 'cash_bank.reconciliation')]"/>
+	    <field name="model">cash_bank.reconciliation</field>
         </record>
         <record model="ir.model.button-res.group"
                 id="reconciliation_confirm_button_group_cash_bank_reconciliation_admin">
@@ -204,7 +204,7 @@ the full copyright notices and license terms. -->
         <record model="ir.model.button" id="reconciliation_cancel_button">
             <field name="name">cancel</field>
             <field name="string">Cancel</field>
-            <field name="model" search="[('model', '=', 'cash_bank.reconciliation')]"/>
+	    <field name="model">cash_bank.reconciliation</field>
         </record>
         <record model="ir.model.button-res.group"
                 id="reconciliation_cancel_button_group_cash_bank_reconciliation_admin">
@@ -215,7 +215,7 @@ the full copyright notices and license terms. -->
         <record model="ir.model.button" id="reconciliation_complete_lines_button">
             <field name="name">complete_lines</field>
             <field name="string">Get lines</field>
-            <field name="model" search="[('model', '=', 'cash_bank.reconciliation')]"/>
+	    <field name="model">cash_bank.reconciliation</field>
         </record>
         <record model="ir.model.button-res.group"
                 id="reconciliation_complete_lines_button_group_cash_bank_reconciliation">
