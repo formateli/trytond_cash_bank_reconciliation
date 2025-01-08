@@ -635,8 +635,12 @@ class ReconciliationLine(ModelSQL, ModelView):
             self.description = self.move_line.description
 
     def get_move_line_field(self, name=None):
+        fld_name = None
         if self.move_line:
-            value = getattr(self.move_line, name)
+            fld_name = name
+            if name == 'move_description':
+                fld_name = 'move_description_used'
+            value = getattr(self.move_line, fld_name)
             return value
 
     def get_account(self, name=None):

@@ -39,17 +39,20 @@ class ReconciliationTestCase(ModuleTestCase):
             create_fiscalyear(company)
 
             account_transfer, = Account.search([
-                    ('name', '=', 'Main Expense'),
-                    ])
+                    ('type.receivable', '=', True),
+                    ('closed', '=', False),
+                    ], limit=1)
             account_cash, = Account.search([
-                    ('name', '=', 'Main Cash'),
+                    ('code', '=', '1.1.1'),
                     ])
             account_revenue, = Account.search([
-                    ('name', '=', 'Main Revenue'),
-                    ])
+                    ('type.revenue', '=', True),
+                    ('closed', '=', False),
+                    ], limit=1)
             account_expense, = Account.search([
-                    ('name', '=', 'Main Expense'),
-                    ])
+                    ('type.expense', '=', True),
+                    ('closed', '=', False),
+                    ], limit=1)
 
             journal = create_journal(company, 'journal_cash')
 
