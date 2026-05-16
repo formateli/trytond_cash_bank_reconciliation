@@ -220,12 +220,12 @@ class ReconciliationTestCase(ModuleTestCase):
     def _create_party(cls, name, account):
         pool = Pool()
         Party = pool.get('party.party')
-        Address = pool.get('party.address')
-        addr = Address(name=name)
+        #Address = pool.get('party.address')
+        #addr = Address(name=name)
         party = Party(
             name=name,
             account_receivable=account,
-            addresses=[addr]
+        #    addresses=[addr]
             )
         party.save()
         return party
