@@ -133,7 +133,10 @@ class Reconciliation(Workflow, ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super(Reconciliation, cls).__setup__()
-        cls._order[0] = ('date_start', 'DESC')
+        cls._order = [
+                ('date_start', 'DESC'),
+                ('id', 'DESC')
+                ]
 
         cls._transitions |= set(
             (
@@ -594,7 +597,8 @@ class ReconciliationLine(ModelSQL, ModelView):
 
         cls._order = [
                 ('date', 'ASC'),
-                ('move_line.id', 'ASC')
+                ('move_line.id', 'ASC'),
+                ('id', 'DESC')
                 ]
 
     @fields.depends('reconciliation',
